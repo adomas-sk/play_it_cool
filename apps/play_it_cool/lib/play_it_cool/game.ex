@@ -4,8 +4,6 @@ defmodule PlayItCool.Game do
   import Ecto.Changeset
 
   schema "lobbies" do
-    field :game_token, :string
-
     belongs_to :lobby, PlayItCool.Lobby,
       foreign_key: :lobby_id,
       references: :id
@@ -20,7 +18,7 @@ defmodule PlayItCool.Game do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:game_token, :lobby_id, :subject_id])
-    |> validate_required([:game_token, :lobby_id, :subject_id])
+    |> cast(attrs, [:lobby_token, :lobby_id, :subject_id])
+    |> validate_required([:lobby_token, :lobby_id, :subject_id])
   end
 end

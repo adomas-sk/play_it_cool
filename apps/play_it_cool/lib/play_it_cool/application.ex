@@ -10,9 +10,11 @@ defmodule PlayItCool.Application do
       # Start the Ecto repository
       PlayItCool.Repo,
       # Start the PubSub system
-      {Phoenix.PubSub, name: PlayItCool.PubSub}
-      # Start a worker by calling: PlayItCool.Worker.start_link(arg)
-      # {PlayItCool.Worker, arg}
+      {Phoenix.PubSub, name: PlayItCool.PubSub},
+      # Start the Registry
+      {Registry, keys: :unique, name: Registry.GameLobbies},
+      # Start DynamicSupervisor for GameLobbies
+      {DynamicSupervisor, name: GameLobbiesSupervisor, strategy: :one_for_one}
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one, name: PlayItCool.Supervisor)

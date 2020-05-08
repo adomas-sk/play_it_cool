@@ -1,4 +1,9 @@
 defmodule PlayItCool.Event do
+  @moduledoc """
+    Event schema module. Events are ment to represent
+    what happens in lobbies, chronologically
+  """
+
   use Ecto.Schema
 
   import Ecto.Changeset

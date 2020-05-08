@@ -4,6 +4,7 @@ defmodule PlayItCool.Repo.Migrations.CreateLobbies do
   def change do
     create table(:lobbies) do
       add :state, :string
+      add :lobby_token, :integer
       add :owner_id, references(:users)
 
       timestamps()
