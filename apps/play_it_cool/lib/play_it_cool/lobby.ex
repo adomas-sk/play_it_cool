@@ -4,8 +4,9 @@ defmodule PlayItCool.Lobby do
   import Ecto.Changeset
 
   schema "lobbies" do
-		field :state, :string
-		belongs_to :user, PlayItCool.User,
+    field :state, :string
+
+    belongs_to :user, PlayItCool.User,
       foreign_key: :owner_id,
       references: :id
 

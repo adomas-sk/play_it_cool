@@ -4,7 +4,7 @@ defmodule PlayItCool.Subject do
   import Ecto.Changeset
 
   schema "subjects" do
-		field :label, :string
+    field :label, :string
 
     timestamps()
   end

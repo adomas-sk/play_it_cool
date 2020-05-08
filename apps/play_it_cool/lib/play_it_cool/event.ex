@@ -4,11 +4,18 @@ defmodule PlayItCool.Event do
   import Ecto.Changeset
 
   schema "events" do
-		field :event_type, :string
-		belongs_to :game, PlayItCool.Game,
+    field :event_type, :string
+    field :details, :string
+
+    belongs_to :game, PlayItCool.Game,
       foreign_key: :game_id,
       references: :id
-		belongs_to :player, PlayItCool.Player,
+
+    belongs_to :lobby, PlayItCool.Lobby,
+      foreign_key: :lobby_id,
+      references: :id
+
+    belongs_to :player, PlayItCool.Player,
       foreign_key: :player_id,
       references: :id
 
@@ -18,7 +25,7 @@ defmodule PlayItCool.Event do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:event_type, :game_id, :player_id])
-    |> validate_required([:state, :owner_id])
+    |> cast(attrs, [:event_type, :lobby_id, :game_id, :player_id, :details])
+    |> validate_required([:event_type, :lobby_id, :player_id])
   end
 end

@@ -1,14 +1,16 @@
 defmodule PlayItCool.Game do
-	use Ecto.Schema
+  use Ecto.Schema
 
   import Ecto.Changeset
 
   schema "lobbies" do
-		field :game_token, :string
-		belongs_to :lobby, PlayItCool.Lobby,
+    field :game_token, :string
+
+    belongs_to :lobby, PlayItCool.Lobby,
       foreign_key: :lobby_id,
-			references: :id
-		belongs_to :subject, PlayItCool.Subject,
+      references: :id
+
+    belongs_to :subject, PlayItCool.Subject,
       foreign_key: :subject_id,
       references: :id
 

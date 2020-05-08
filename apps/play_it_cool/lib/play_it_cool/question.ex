@@ -5,6 +5,7 @@ defmodule PlayItCool.Question do
 
   schema "users" do
     field :question, :string
+
     belongs_to :subject, PlayItCool.Subject,
       foreign_key: :subject_id,
       references: :id

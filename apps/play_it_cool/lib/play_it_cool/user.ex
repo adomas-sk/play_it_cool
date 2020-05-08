@@ -7,6 +7,7 @@ defmodule PlayItCool.User do
     field :email, :string
     field :password, :string
     field :username, :string
+    field :lowercase_username, :string
 
     timestamps()
   end
@@ -14,7 +15,7 @@ defmodule PlayItCool.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :username, :password])
-    |> validate_required([:email, :username, :password])
+    |> cast(attrs, [:email, :username, :password, :lowercase_username])
+    |> validate_required([:email, :username, :password, :lowercase_username])
   end
 end

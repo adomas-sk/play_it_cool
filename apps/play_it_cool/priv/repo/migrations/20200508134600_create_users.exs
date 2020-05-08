@@ -5,6 +5,7 @@ defmodule PlayItCool.Repo.Migrations.CreateUsers do
     create table(:users) do
       add :email, :string
       add :username, :string
+      add :lowercase_username, :string
       add :password, :string
 
       timestamps()

@@ -3,12 +3,14 @@ defmodule PlayItCool.Player do
 
   import Ecto.Changeset
 
-  schema "player" do
+  schema "players" do
     field :name, :string
+
     belongs_to :lobby, PlayItCool.Lobby,
       foreign_key: :lobby_id,
       references: :id
-		belongs_to :user, PlayItCool.User,
+
+    belongs_to :user, PlayItCool.User,
       foreign_key: :user_id,
       references: :id
 
