@@ -4,6 +4,6 @@ defmodule PlayItCoolWeb.Types.User do
   alias PlayItCoolWeb.Resolvers
 
   object :user do
-    field :name, :string
+    field(:name, :string)
   end
 end

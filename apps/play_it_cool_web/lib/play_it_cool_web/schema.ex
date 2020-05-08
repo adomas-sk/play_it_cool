@@ -1,7 +1,7 @@
 defmodule PlayItCoolWeb.Schema do
   use Absinthe.Schema
-  import_types PlayItCoolWeb.Types.User
-  import_types Absinthe.Type.Custom
+  import_types(PlayItCoolWeb.Types.User)
+  import_types(Absinthe.Type.Custom)
 
   alias PlayItCoolWeb.Resolvers
 
@@ -15,8 +15,7 @@ defmodule PlayItCoolWeb.Schema do
 
     @desc "Get all users"
     field :users, list_of(:user) do
-      resolve &Resolvers.User.list_users/3
+      resolve(&Resolvers.User.list_users/3)
     end
-
   end
 end

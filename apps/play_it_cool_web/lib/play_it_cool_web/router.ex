@@ -24,14 +24,10 @@ defmodule PlayItCoolWeb.Router do
   scope "/api" do
     pipe_through :graphql
 
-    forward "/graphiql", Absinthe.Plug.GraphiQL,
-      schema: PlayItCoolWeb.Schema
+    forward "/graphiql", Absinthe.Plug.GraphiQL, schema: PlayItCoolWeb.Schema
 
-    forward "/", Absinthe.Plug,
-      schema: PlayItCoolWeb.Schema
-
+    forward "/", Absinthe.Plug, schema: PlayItCoolWeb.Schema
   end
-
 
   scope "/web", PlayItCoolWeb do
     pipe_through :browser
