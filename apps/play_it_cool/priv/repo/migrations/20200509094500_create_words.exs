@@ -1,9 +1,9 @@
-defmodule PlayItCool.Repo.Migrations.CreateQuestions do
+defmodule PlayItCool.Repo.Migrations.CreateWords do
   use Ecto.Migration
 
   def change do
-    create table(:questions) do
-      add :question, :string
+    create table(:words) do
+      add :word, :string
       add :subject_id, references(:subjects)
 
       timestamps()

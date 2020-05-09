@@ -9,18 +9,24 @@ defmodule PlayItCool.Scenarios.CreateLobby do
 
   alias PlayItCool.{Lobby, Event, Player, Repo}
 
-  @spec initialize(%{email: String.t(), username: String.t(), id: identifier()}) ::
-          {:ok, Event} | {:error, any()}
+  @spec initialize(%{
+          email: String.t(),
+          username: String.t(),
+          id: identifier(),
+          lowercase_username: String.t()
+        }) ::
+          {:ok, Lobby.t()} | {:error, any()}
   def initialize(user) do
     try do
-      join_event =
+      lobby =
         user
         |> create_lobby
-        |> start_game_lobby
+        |> start_game_lobby_process
         |> add_user_as_player(user)
+        |> add_player_to_game_lobby_process
         |> add_join_event()
 
-      {:ok, join_event}
+      {:ok, lobby}
     rescue
       errors ->
         set_lobby_state_to_error(errors)
@@ -30,7 +36,7 @@ defmodule PlayItCool.Scenarios.CreateLobby do
 
   defp create_lobby(%{id: user_id} = _) do
     %Lobby{}
-    |> Lobby.changeset(%{owner_id: user_id, state: "INIT"})
+    |> Lobby.changeset(Lobby.get_unique_lobby_token(%{owner_id: user_id, state: "INIT"}))
     |> Repo.insert!()
   end
 
@@ -50,7 +56,7 @@ defmodule PlayItCool.Scenarios.CreateLobby do
     {lobby, player}
   end
 
-  defp add_join_event({%Lobby{id: lobby_id}, %Player{id: player_id}}) do
+  defp add_join_event({%Lobby{id: lobby_id} = lobby, %Player{id: player_id}}) do
     %Event{}
     |> Event.changeset(%{
       event_type: "JOIN_LOBBY",
@@ -58,11 +64,20 @@ defmodule PlayItCool.Scenarios.CreateLobby do
       player_id: player_id
     })
     |> Repo.insert!()
+
+    lobby
   end
 
-  defp start_game_lobby(%Lobby{lobby_token: lobby_token} = lobby) do
-    PlayItCool.GameLobby.start_link(Integer.to_string(lobby_token))
+  defp start_game_lobby_process(%Lobby{lobby_token: lobby_token, id: lobby_id} = lobby) do
+    PlayItCool.GameLobby.start_link(Integer.to_string(lobby_token), lobby_id)
     lobby
+  end
+
+  defp add_player_to_game_lobby_process(
+         {%Lobby{lobby_token: lobby_token} = lobby, %Player{name: name, id: player_id} = player}
+       ) do
+    PlayItCool.GameLobby.add_player(%{id: player_id, name: name}, Integer.to_string(lobby_token))
+    {lobby, player}
   end
 
   defp set_lobby_state_to_error(_errors) do

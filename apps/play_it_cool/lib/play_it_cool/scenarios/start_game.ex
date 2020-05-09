@@ -6,8 +6,9 @@ defmodule PlayItCool.Scenarios.StartGame do
   """
   import Ecto.Query
 
-  alias PlayItCool.{Repo, Game, Lobby, Subject, Event, Player, Question}
+  alias PlayItCool.{Repo, Game, Lobby, Subject, Event, Player, Question, Word}
 
+  @spec start_game(any, any) :: :ok | {:error, any}
   def start_game(lobby_token, subject) do
     case fetch_lobby(lobby_token) do
       {:error, message} ->
@@ -19,19 +20,24 @@ defmodule PlayItCool.Scenarios.StartGame do
         |> fetch_lobby_owner_player()
         |> add_game_start_event()
         |> set_lobby_status_to_playing()
+        |> get_game_word()
         |> get_game_questions()
         |> send_data_to_game_lobby_process()
     end
   end
 
-  defp create_game(%Subject{id: subject_id}, %Lobby{id: lobby_id}) do
-    %Game{}
-    |> Game.changeset(%{subject_id: subject_id, lobby_id: lobby_id})
-    |> Repo.insert!()
+  defp create_game(%Subject{id: subject_id}, %Lobby{id: lobby_id} = lobby) do
+    game =
+      %Game{}
+      |> Game.changeset(%{subject_id: subject_id, lobby_id: lobby_id})
+      |> Repo.insert!()
+
+    {lobby, game}
   end
 
   defp get_game_questions(
-         {%Lobby{id: lobby_id, lobby_token: lobby_token}, %Game{subject_id: subject_id} = game}
+         {%Lobby{id: lobby_id, lobby_token: lobby_token}, %Game{subject_id: subject_id} = game,
+          word}
        ) do
     questions =
       from(question in Question, where: question.subject_id == ^subject_id)
@@ -41,10 +47,20 @@ defmodule PlayItCool.Scenarios.StartGame do
       from(player in Player, where: player.lobby_id == ^lobby_id)
       |> Repo.all()
 
-    game_questions = questions
-    Enum.take_random(questions, length(players) * 2)
+    game_questions =
+      questions
+      |> Enum.take_random(length(players) * 2)
 
-    {game, game_questions, lobby_token}
+    {game, game_questions, lobby_token, word}
+  end
+
+  defp get_game_word({lobby, %Game{subject_id: subject_id} = game}) do
+    word =
+      from(w in Word, where: w.subject_id == ^subject_id)
+      |> Repo.all()
+      |> Enum.random()
+
+    {lobby, game, word.word}
   end
 
   defp add_game_start_event(
@@ -70,19 +86,21 @@ defmodule PlayItCool.Scenarios.StartGame do
     {lobby, game}
   end
 
-  defp send_data_to_game_lobby_process({%Game{id: game_id}, questions, lobby_token}) do
+  defp send_data_to_game_lobby_process({%Game{id: game_id}, questions, lobby_token, word}) do
     %{
-      questions: Enum.map(questions, fn q -> q.question end),
-      game: %{
-        id: game_id
-      }
+      questions: Enum.map(questions, fn q -> %{question: q.question, id: q.id} end),
+      id: game_id,
+      word: word
     }
-    |> PlayItCool.GameLobby.start_new_game(lobby_token)
+    |> PlayItCool.GameLobby.start_new_game(Integer.to_string(lobby_token))
   end
 
   # TODO: move this and join_lobby.ex function to a separate module for reuse
   defp fetch_lobby(lobby_token) do
-    case from(lobby in Lobby, where: lobby.lobby_token == ^lobby_token)
+    case from(lobby in Lobby,
+           where: lobby.lobby_token == ^lobby_token,
+           where: lobby.state == "INIT"
+         )
          |> Repo.one() do
       nil ->
         {:error, "No lobby with this token"}

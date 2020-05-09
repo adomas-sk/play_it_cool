@@ -19,11 +19,11 @@ defmodule PlayItCool.Lobby do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(add_lobby_token(attrs), [:state, :owner_id, :lobby_token])
+    |> cast(attrs, [:state, :owner_id, :lobby_token])
     |> validate_required([:state, :owner_id, :lobby_token])
   end
 
-  defp add_lobby_token(attrs) do
+  def get_unique_lobby_token(attrs) do
     token = Enum.random(100_000..999_999)
     Map.put(attrs, :lobby_token, token)
   end

@@ -6,19 +6,22 @@ defmodule PlayItCool.Scenarios.JoinLobby do
 
   alias PlayItCool.{Lobby, Event, Player, Repo}
 
-  def join_lobby(player_name, lobby_token) do
+  @spec join_lobby(any, any) :: :ok | {:error, any}
+  def join_lobby(lobby_token, player_name) do
     case fetch_lobby(lobby_token) do
       {:error, error_message} ->
         {:error, error_message}
 
       lobby ->
-        add_player(player_name, lobby)
+        lobby
+        |> player_name_exists_in_lobby(player_name)
+        |> add_player(player_name)
         |> add_join_event()
         |> add_player_to_game_lobby_process()
     end
   end
 
-  defp add_player(name, %Lobby{id: lobby_id} = lobby) do
+  defp add_player(%Lobby{id: lobby_id} = lobby, name) do
     player =
       %Player{}
       |> Player.changeset(%{name: name, lobby_id: lobby_id})
@@ -49,6 +52,20 @@ defmodule PlayItCool.Scenarios.JoinLobby do
 
       lobby ->
         lobby
+    end
+  end
+
+  defp player_name_exists_in_lobby(%Lobby{id: lobby_id} = lobby, player_name) do
+    case from(player in Player,
+           where: player.name == ^player_name,
+           where: player.lobby_id == ^lobby_id
+         )
+         |> Repo.one() do
+      nil ->
+        lobby
+
+      _ ->
+        raise "Player name already exists in this lobby"
     end
   end
 end

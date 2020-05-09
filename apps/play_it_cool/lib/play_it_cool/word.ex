@@ -1,10 +1,10 @@
-defmodule PlayItCool.Question do
+defmodule PlayItCool.Word do
   use Ecto.Schema
 
   import Ecto.Changeset
 
-  schema "questions" do
-    field :question, :string
+  schema "words" do
+    field :word, :string
 
     belongs_to :subject, PlayItCool.Subject,
       foreign_key: :subject_id,
@@ -16,7 +16,7 @@ defmodule PlayItCool.Question do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:question, :subject_id])
-    |> validate_required([:question, :subject_id])
+    |> cast(attrs, [:word, :subject_id])
+    |> validate_required([:word, :subject_id])
   end
 end
