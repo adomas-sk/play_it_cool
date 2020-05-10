@@ -1,0 +1,1 @@
+export const CONNECT_TO_SOCKET = 'CONNECT_TO_SOCKET';

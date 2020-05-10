@@ -18,6 +18,7 @@ defmodule PlayItCool.Scenarios.JoinLobby do
         |> add_player(player_name)
         |> add_join_event()
         |> add_player_to_game_lobby_process()
+        {:ok, lobby}
     end
   end
 

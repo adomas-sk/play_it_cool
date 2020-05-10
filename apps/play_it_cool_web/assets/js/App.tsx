@@ -1,29 +1,24 @@
 import React from 'react';
-import {
-	Router,
-	Switch,
-	Route,
-} from 'react-router-dom';
-import { createBrowserHistory } from 'history';
 
-const history = createBrowserHistory({basename: '/web'});
+import { ThemeProvider } from '@material-ui/styles';
+import { Provider } from 'react-redux';
+
+import theme from './shared/theme';
+import store from './shared/store';
+import Router from './Router';
+import { ApolloProvider } from '@apollo/react-hooks';
+import client from './shared/graphql';
 
 const App: React.FC = () => {
-	return (
-		<Router history={history}>
-			<Switch>
-				<Route exact path="/">
-					Hello
-				</Route>
-				<Route exact path="/login">
-					Login
-				</Route>
-                <Route>
-                    NONO
-                </Route>
-			</Switch>
-		</Router>
-	);
+  return (
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router />
+        </ThemeProvider>
+      </Provider>
+    </ApolloProvider>
+  );
 };
 
 export default App;

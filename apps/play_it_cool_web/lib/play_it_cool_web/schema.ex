@@ -1,21 +1,33 @@
 defmodule PlayItCoolWeb.Schema do
   use Absinthe.Schema
   import_types(PlayItCoolWeb.Types.User)
+  import_types(PlayItCoolWeb.Types.Game)
   import_types(Absinthe.Type.Custom)
 
   alias PlayItCoolWeb.Resolvers
 
   query do
-    # @desc "Login"
-    # field :login, :token do
-    #   arg :email, non_null(:string)
-    #   arg :password, non_null(:string)
-    #   resolve &Resolvers.User.login/3
-    # end
-
     @desc "Get all users"
     field :users, list_of(:user) do
       resolve(&Resolvers.User.list_users/3)
+    end
+  end
+
+  mutation do
+    @desc "Create a lobby"
+    field :create_lobby, :lobby do
+      arg(:id, :string)
+      arg(:username, :string)
+
+      resolve(&Resolvers.Game.create_lobby/3)
+    end
+
+    @desc "Join lobby"
+    field :join_lobby, :lobby do
+      arg(:lobby_token, :integer)
+      arg(:player_name, :string)
+
+      resolve(&Resolvers.Game.join_lobby/3)
     end
   end
 end

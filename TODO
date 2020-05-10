@@ -1,0 +1,22 @@
+graphQL:
+  ✔ create lobby @done(20-05-10 14:50)
+  ✔ join lobby @done(20-05-10 23:55)
+websocket:
+  ☐ updates about someone joining the lobby
+  ☐ start game
+  ☐ confirm word/that you're cool
+  ☐ answer question
+  ☐ vote
+
+handle WS disconnection:
+  ☐ when confirming
+  ☐ when answering
+  ☐ when voting
+  ☐ when in lobby
+
+things to fix:
+  ☐ lobby process should timeout after 1min of inactivity
+
+refactoring:
+  ☐ Make game lobby process state a module struct and move state changing to that module
+  ☐ Tests after making VIP
