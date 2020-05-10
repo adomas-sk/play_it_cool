@@ -24,7 +24,7 @@ defmodule PlayItCool.Scenarios.CreateLobby do
         |> start_game_lobby_process
         |> add_user_as_player(user)
         |> add_player_to_game_lobby_process
-        |> add_join_event()
+        |> add_create_and_join_events()
 
       {:ok, lobby}
     rescue
@@ -56,7 +56,15 @@ defmodule PlayItCool.Scenarios.CreateLobby do
     {lobby, player}
   end
 
-  defp add_join_event({%Lobby{id: lobby_id} = lobby, %Player{id: player_id}}) do
+  defp add_create_and_join_events({%Lobby{id: lobby_id} = lobby, %Player{id: player_id}}) do
+    %Event{}
+    |> Event.changeset(%{
+      event_type: "CREATE_LOBBY",
+      lobby_id: lobby_id,
+      player_id: player_id
+    })
+    |> Repo.insert!()
+
     %Event{}
     |> Event.changeset(%{
       event_type: "JOIN_LOBBY",

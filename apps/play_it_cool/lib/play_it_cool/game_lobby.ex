@@ -1,4 +1,10 @@
 defmodule PlayItCool.GameLobby do
+  @moduledoc """
+    Game lobby process that will live as long as there are players
+
+    TODO: Refactor, it's a mess
+  """
+
   use GenServer
 
   @spec start_link(String.t(), String.t()) :: :ignore | {:error, any} | {:ok, pid}
@@ -33,7 +39,7 @@ defmodule PlayItCool.GameLobby do
   @impl true
   def handle_cast(
         {:vote_word, player_id, word},
-        %{current_game: current_game, players: players} = state
+        %{current_game: current_game} = state
       ) do
     new_current_game =
       current_game
@@ -42,13 +48,13 @@ defmodule PlayItCool.GameLobby do
       end)
 
     new_state = Map.update(state, :current_game, state.current_game, fn _ -> new_current_game end)
-    check_if_game_ended(new_state, players)
+    check_if_game_ended(new_state)
   end
 
   @impl true
   def handle_cast(
         {:vote_cool, player_id, player_name},
-        %{current_game: current_game, players: players} = state
+        %{current_game: current_game} = state
       ) do
     new_current_game =
       current_game
@@ -57,7 +63,7 @@ defmodule PlayItCool.GameLobby do
       end)
 
     new_state = Map.update(state, :current_game, state.current_game, fn _ -> new_current_game end)
-    check_if_game_ended(new_state, players)
+    check_if_game_ended(new_state)
   end
 
   @impl true
@@ -85,8 +91,6 @@ defmodule PlayItCool.GameLobby do
       send_next_question(next_question)
       {:noreply, new_state}
     else
-      IO.puts("VOTING BEGINS")
-
       {:noreply,
        Map.update(new_state, :current_game, new_state.current_game, fn game ->
          Map.put_new(game, :votes, [])
@@ -149,27 +153,112 @@ defmodule PlayItCool.GameLobby do
     {:reply, state, state}
   end
 
-  defp check_if_game_ended(%{current_game: %{votes: votes} = _current_game} = state, players) do
+  def check_if_game_ended(
+        %{current_game: %{votes: votes} = _current_game, players: players} = state
+      ) do
     cond do
       length(votes) == length(players) ->
-        %{
-          players: players,
-          games: games
-        } = state
-
-        scores = {1, 2, 3}
-
-        reset_state = %{
-          players: Enum.map(players, fn p -> %{id: p.id, name: p.name} end),
-          games: games,
-          scores: scores
-        }
-
-        {:noreply, reset_state}
+        get_reset_state(state)
 
       true ->
         IO.puts("Continue")
         {:noreply, state}
+    end
+  end
+
+  defp get_reset_state(
+         %{
+           current_game:
+             %{votes: votes, playing_it_cool: playing_it_cool, word: word, id: game_id} = _current_game,
+           players: players,
+           lobby_id: lobby_id,
+           games: games
+         } = state
+       ) do
+    IO.inspect(state)
+
+    scores =
+      players
+      |> Enum.map(fn player ->
+        case player.id == playing_it_cool.id do
+          true ->
+            score =
+              get_score_of_player_who_was_playing_cool(votes, playing_it_cool, players, word)
+
+            {player.id, score}
+
+          false ->
+            score = get_score_of_player_who_knew_the_word(votes, player, playing_it_cool)
+            {player.id, score}
+        end
+      end)
+
+    reset_state = %{
+      players: Enum.map(players, fn p -> %{id: p.id, name: p.name} end),
+      games: games,
+      scores: get_next_scores(Map.has_key?(state, :scores), scores, votes)
+    }
+    PlayItCool.Scenarios.EndGame.end_game(lobby_id, game_id, reset_state.scores)
+
+    {:noreply, reset_state}
+  end
+
+  defp get_next_scores(has_scores?, scores, votes) do
+    case has_scores? do
+      true ->
+        scores
+        |> Enum.map(fn {player_id, score} ->
+          {_, prev_score} =
+            votes
+            |> Enum.find(fn v -> v.player_id == player_id end)
+
+          {player_id, score + prev_score}
+        end)
+
+      false ->
+        scores
+    end
+  end
+
+  defp get_score_of_player_who_was_playing_cool(votes, playing_it_cool_player, players, word) do
+    calculate_points_for_not_being_guessed(votes, playing_it_cool_player, players) +
+      calculate_points_for_guessing_the_word(votes, playing_it_cool_player, word)
+  end
+
+  defp get_score_of_player_who_knew_the_word(votes, player, playing_it_cool_player) do
+    vote =
+      votes
+      |> Enum.find(fn v -> v.player_id == player.id end)
+
+    case vote.voted_who_played_cool == playing_it_cool_player.name do
+      true -> 10
+      false -> 0
+    end
+  end
+
+  defp calculate_points_for_guessing_the_word(votes, playing_it_cool_player, word) do
+    vote_guessing_the_word =
+      votes
+      |> Enum.find(fn v -> v.player_id == playing_it_cool_player.id end)
+
+    case vote_guessing_the_word.voted_for_word == word do
+      true -> 10
+      false -> 0
+    end
+  end
+
+  defp calculate_points_for_not_being_guessed(votes, playing_it_cool_player, players) do
+    player_count_who_voted_right =
+      votes
+      |> Enum.filter(fn v ->
+        Map.has_key?(v, :voted_who_played_cool) &&
+          v.voted_who_played_cool == playing_it_cool_player.name
+      end)
+      |> length
+
+    case player_count_who_voted_right > length(players) / 2 do
+      true -> 0
+      false -> 20
     end
   end
 
