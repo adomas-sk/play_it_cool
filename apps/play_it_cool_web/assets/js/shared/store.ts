@@ -1,10 +1,17 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 
-import { reducer as webReducer } from '../web/lobby/reducer';
+import { reducer as lobbyReducer, ILobbyReducer } from '../web/lobby/reducer';
+import { reducer as gameReducer, IGameReducer } from '../web/game/reducer';
 
-const rootReducer = combineReducers({
-  web: webReducer,
+export interface IRootStore {
+  lobby: ILobbyReducer;
+  game: IGameReducer;
+}
+
+const rootReducer = combineReducers<IRootStore>({
+  lobby: lobbyReducer,
+  game: gameReducer,
 });
 
 const store = createStore(

@@ -1,7 +1,15 @@
 import React from 'react';
-import Lobby from './web/lobby/Lobby';
-import { Router as ReactRouter, Switch, Route } from 'react-router-dom';
+import {
+  Router as ReactRouter,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 import { createBrowserHistory } from 'history';
+
+import Lobby from './web/lobby/Lobby';
+import Game from './web/game/Game';
+import Initial from './web/initial/Initial';
 
 const history = createBrowserHistory({ basename: '/web' });
 
@@ -10,12 +18,16 @@ const Router = () => {
     <ReactRouter history={history}>
       <Switch>
         <Route exact path="/">
-          Hello
-          <br />
-          World
+          <Initial />
         </Route>
         <Route exact path="/lobby">
           <Lobby />
+        </Route>
+        <Route exact path="/game/:lobbyToken">
+          <Game />
+        </Route>
+        <Route path="/game">
+          <Redirect to="/lobby" />
         </Route>
         <Route exact path="/login">
           Login

@@ -1,34 +1,34 @@
 import { gql } from 'apollo-boost';
 
-export interface ILobbyData {
+export type LobbyData = {
   id: string;
-  state: string;
+  lobbyAuthToken: string;
   lobbyToken: number;
-}
+};
 
 export interface ICreateLobbyResult {
-  createLobby: ILobbyData
+  createLobby: LobbyData;
 }
 
 export const CREATE_LOBBY = gql`
   mutation createLobby($id: String!, $username: String!) {
     createLobby(id: $id, username: $username) {
       id
-      state
+      lobbyAuthToken
       lobbyToken
     }
   }
 `;
 
 export interface IJoinLobbyResult {
-  joinLobby: ILobbyData
+  joinLobby: LobbyData;
 }
 
 export const JOIN_LOBBY = gql`
-  mutation joinLobby($lobbyToken: Integer!, $username: String!) {
-    joinLobby(lobbyToken: $lobbyToken, playerName: $username) {
+  mutation joinLobby($lobbyToken: Int!, $playerName: String!) {
+    joinLobby(lobbyToken: $lobbyToken, playerName: $playerName) {
       id
-      state
+      lobbyAuthToken
       lobbyToken
     }
   }

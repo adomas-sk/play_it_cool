@@ -1,16 +1,19 @@
 import { Dispatch } from 'redux';
 
 import { CONNECT_TO_SOCKET } from './actionTypes';
-import initSocket from '../../shared/socket';
-import { ICreateLobbyResult } from './queries';
+import initSocket, { initializeUserSocket } from '../../shared/socket';
+import { LobbyData } from './queries';
 
-export const startSocket = (data: ICreateLobbyResult) => (
-  dispatch: Dispatch
-) => {
-  initSocket(data.createLobby.lobbyToken);
+export const joinSocketChannel = (
+  data: LobbyData,
+  redirectOnSuccessCallback: () => void
+) => (dispatch: Dispatch) => {
+  localStorage.setItem('channelToken', data.lobbyAuthToken);
+  initSocket(data.lobbyToken, redirectOnSuccessCallback);
+  initializeUserSocket();
 
   dispatch({
     type: CONNECT_TO_SOCKET,
-    payload: data.createLobby.lobbyToken,
+    payload: data,
   });
 };

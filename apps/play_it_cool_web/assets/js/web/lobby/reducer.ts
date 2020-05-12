@@ -1,16 +1,33 @@
-import { CONNECT_TO_SOCKET } from './actionTypes';
+import { CONNECT_TO_SOCKET, SET_SELF_AS_OWNER_OF_LOBBY } from './actionTypes';
+import { LobbyData } from './queries';
+
+type LobbyReducerTypes =
+  | typeof CONNECT_TO_SOCKET
+  | typeof SET_SELF_AS_OWNER_OF_LOBBY;
 
 export interface IAction {
-  type: typeof CONNECT_TO_SOCKET;
+  type: LobbyReducerTypes;
   payload: any;
 }
 
-const initialState = {};
+const initialState = {
+  isOwner: false,
+};
 
-export const reducer = (state = initialState, { type, payload }: IAction) => {
+export interface ILobbyReducer {
+  initialLobby?: LobbyData;
+  isOwner: boolean;
+}
+
+export const reducer = (
+  state = initialState,
+  { type, payload }: IAction
+): ILobbyReducer => {
   switch (type) {
     case CONNECT_TO_SOCKET:
-      return { ...state, connection: payload };
+      return { ...state, initialLobby: payload };
+    case SET_SELF_AS_OWNER_OF_LOBBY:
+      return { ...state, isOwner: true };
     default:
       return state;
   }
