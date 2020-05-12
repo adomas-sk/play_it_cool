@@ -1,41 +1,69 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
+import clsx from 'clsx';
 import { ITheme } from '../shared/theme';
 
 const useStyle = makeStyles((theme: ITheme) => ({
   container: {
     padding: 4,
-    width: '100%',
   },
-  button: {
+  buttonBase: {
     padding: '16px 34px',
-    color: theme.palette.secondary,
     fontSize: 24,
-    background: theme.palette.primary,
-    transition: 'top 0.15s',
+    color: theme.palette.secondary,
     border: 'none',
     borderRadius: 4,
+  },
+  button: {
+    background: theme.palette.primary,
+    transition: 'top 0.15s',
     boxShadow: '0px 5px 5px 0px rgba(0,0,0,0.5)',
+    cursor: 'pointer',
 
     '&:hover': {
       background: theme.palette.primaryLight,
       transform: 'translateY(2px)',
-      boxShadow: '0px 3px 5px 0px rgba(0,0,0,0.5)',
+      boxShadow: '0px 3px 5px 0px rgba(0,0,0,0.3)',
     },
+  },
+  disabled: {
+    background: theme.palette.primaryLight,
+  },
+  fullWidth: {
+    width: '100%',
   },
 }));
 
 interface IButtonProps {
   label: string;
   onClick: (e?: React.MouseEvent) => void;
+  disabled?: boolean;
+  fullWidth?: boolean;
 }
 
-const Button: React.FC<IButtonProps> = ({ label, onClick }) => {
+const Button: React.FC<IButtonProps> = ({
+  label,
+  onClick,
+  fullWidth,
+  disabled = false,
+}) => {
   const classes = useStyle();
+
+  const buttonClassName = clsx({
+    [classes.buttonBase]: true,
+    [classes.fullWidth]: fullWidth,
+    [classes.disabled]: disabled,
+    [classes.button]: !disabled,
+  });
 
   return (
     <div className={classes.container}>
-      <button type="button" className={classes.button} onClick={onClick}>
+      <button
+        type="button"
+        className={buttonClassName}
+        onClick={onClick}
+        disabled={disabled}
+      >
         {label}
       </button>
     </div>
