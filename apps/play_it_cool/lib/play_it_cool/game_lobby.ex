@@ -13,6 +13,7 @@ defmodule PlayItCool.GameLobby do
 
     init_state = %{
       lobby_id: lobby_id,
+      lobby_token: lobby_token,
       players: [],
       games: []
     }
@@ -30,10 +31,44 @@ defmodule PlayItCool.GameLobby do
 
   @impl true
   def handle_cast({:add_player, player}, state) do
-    {:noreply,
-     Map.update(state, :players, state.players, fn existing_players ->
-       [player | existing_players]
-     end)}
+    new_state =
+      if length(state.players) == 0 do
+        state
+        |> Map.update(:players, state.players, fn existing_players ->
+          [player | existing_players]
+        end)
+        |> Map.put_new(:lobby_master, player.id)
+      else
+        state
+        |> Map.update(:players, state.players, fn existing_players ->
+          [player | existing_players]
+        end)
+      end
+
+    PlayItCoolWeb.Endpoint.broadcast(
+      "lobby:#{state.lobby_token}",
+      "player_update",
+      %{players: new_state.players}
+    )
+
+    {:noreply, new_state}
+  end
+
+  @impl true
+  def handle_cast({:add_token, player_name, player_token}, state) do
+    new_state =
+      state
+      |> Map.update(:players, state.players, fn existing_players ->
+        Enum.map(existing_players, fn player ->
+          if player.name == player_name && !Map.has_key?(player, :token) do
+            Map.put_new(player, :token, player_token)
+          else
+            player
+          end
+        end)
+      end)
+
+    {:noreply, new_state}
   end
 
   @impl true
@@ -144,8 +179,33 @@ defmodule PlayItCool.GameLobby do
           end)
           |> Map.put_new(:current_game, full_game_data)
 
+        send_words(
+          new_state.players,
+          new_state.current_game.playing_it_cool,
+          new_state.current_game.word
+        )
+
         {:noreply, new_state}
     end
+  end
+
+  defp send_words(players, playing_it_cool, word) do
+    players
+    |> Enum.each(fn player ->
+      if player.id == playing_it_cool.id do
+        PlayItCoolWeb.Endpoint.broadcast(
+          "user:#{player.token}",
+          "word",
+          %{word: nil}
+        )
+      else
+        PlayItCoolWeb.Endpoint.broadcast(
+          "user:#{player.token}",
+          "word",
+          %{word: word}
+        )
+      end
+    end)
   end
 
   @impl true
@@ -169,14 +229,13 @@ defmodule PlayItCool.GameLobby do
   defp get_reset_state(
          %{
            current_game:
-             %{votes: votes, playing_it_cool: playing_it_cool, word: word, id: game_id} = _current_game,
+             %{votes: votes, playing_it_cool: playing_it_cool, word: word, id: game_id} =
+               _current_game,
            players: players,
            lobby_id: lobby_id,
            games: games
          } = state
        ) do
-    IO.inspect(state)
-
     scores =
       players
       |> Enum.map(fn player ->
@@ -194,10 +253,12 @@ defmodule PlayItCool.GameLobby do
       end)
 
     reset_state = %{
-      players: Enum.map(players, fn p -> %{id: p.id, name: p.name} end),
+      players: Enum.map(players, fn p -> %{id: p.id, name: p.name, token: p.token} end),
+      lobby_master: state.lobby_master,
       games: games,
       scores: get_next_scores(Map.has_key?(state, :scores), scores, votes)
     }
+
     PlayItCool.Scenarios.EndGame.end_game(lobby_id, game_id, reset_state.scores)
 
     {:noreply, reset_state}
@@ -366,6 +427,16 @@ defmodule PlayItCool.GameLobby do
 
       pid ->
         GenServer.cast(pid, {:vote_cool, player_id, player_name})
+    end
+  end
+
+  def save_player_token(lobby_token, player_name, player_token) do
+    case find_game_lobby(lobby_token) do
+      {:error, message} ->
+        {:error, message}
+
+      pid ->
+        GenServer.cast(pid, {:add_token, player_name, player_token})
     end
   end
 end

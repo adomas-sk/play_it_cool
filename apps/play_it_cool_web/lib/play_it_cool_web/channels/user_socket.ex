@@ -3,6 +3,7 @@ defmodule PlayItCoolWeb.UserSocket do
 
   ## Channels
   channel "lobby:*", PlayItCoolWeb.LobbyChannel
+  channel "user:*", PlayItCoolWeb.LobbyChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

@@ -6,7 +6,7 @@ defmodule PlayItCool.Scenarios.JoinLobby do
 
   alias PlayItCool.{Lobby, Event, Player, Repo}
 
-  @spec join_lobby(any, any) :: :ok | {:error, any}
+  @spec join_lobby(any, any) :: {:ok, Lobby.t()} | {:error, any}
   def join_lobby(lobby_token, player_name) do
     case fetch_lobby(lobby_token) do
       {:error, error_message} ->
@@ -18,6 +18,7 @@ defmodule PlayItCool.Scenarios.JoinLobby do
         |> add_player(player_name)
         |> add_join_event()
         |> add_player_to_game_lobby_process()
+
         {:ok, lobby}
     end
   end

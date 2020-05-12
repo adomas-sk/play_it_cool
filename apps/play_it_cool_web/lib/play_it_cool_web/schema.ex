@@ -11,11 +11,16 @@ defmodule PlayItCoolWeb.Schema do
     field :users, list_of(:user) do
       resolve(&Resolvers.User.list_users/3)
     end
+
+    @desc "Get all subjects"
+    field :subjects, list_of(:subject) do
+      resolve(&Resolvers.Game.list_subjects/3)
+    end
   end
 
   mutation do
     @desc "Create a lobby"
-    field :create_lobby, :lobby do
+    field :create_lobby, :lobby_auth_token do
       arg(:id, :string)
       arg(:username, :string)
 
@@ -23,7 +28,7 @@ defmodule PlayItCoolWeb.Schema do
     end
 
     @desc "Join lobby"
-    field :join_lobby, :lobby do
+    field :join_lobby, :lobby_auth_token do
       arg(:lobby_token, :integer)
       arg(:player_name, :string)
 
