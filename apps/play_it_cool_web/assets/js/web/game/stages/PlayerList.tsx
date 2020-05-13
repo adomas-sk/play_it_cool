@@ -25,13 +25,16 @@ const useStyle = makeStyles((theme: ITheme) => ({
 
 interface PlayerListProps {
   lobbyToken: number;
-  nextStage: () => void;
+  changeStage: (stage: string) => void;
 }
 
-const PlayerList: React.FC<PlayerListProps> = ({ lobbyToken, nextStage }) => {
+const PlayerList: React.FC<PlayerListProps> = ({ lobbyToken, changeStage }) => {
   const classes = useStyle();
   const isOwner = useSelector((state: IRootStore) => state.lobby.isOwner);
   const players = useSelector((state: IRootStore) => state.game.players) || [];
+  const votingStarted = useSelector(
+    (state: IRootStore) => state.game.votingStarted
+  );
   const lobbyMaster = useSelector(
     (state: IRootStore) => state.game.lobbyMaster
   );
@@ -46,6 +49,14 @@ const PlayerList: React.FC<PlayerListProps> = ({ lobbyToken, nextStage }) => {
       }
     }
   }, [lobbyMaster]);
+
+  useEffect(() => {
+    if (votingStarted) {
+      changeStage('voting');
+    } else if (players.length && players.every((p) => p?.confirmed)) {
+      changeStage('questioning');
+    }
+  }, [players]);
 
   return (
     <>
@@ -62,7 +73,9 @@ const PlayerList: React.FC<PlayerListProps> = ({ lobbyToken, nextStage }) => {
           label: player.name,
         }))}
       />
-      {isOwner && <Button label="Start Game" onClick={nextStage} />}
+      {isOwner && (
+        <Button label="Start Game" onClick={() => changeStage('topic')} />
+      )}
     </>
   );
 };

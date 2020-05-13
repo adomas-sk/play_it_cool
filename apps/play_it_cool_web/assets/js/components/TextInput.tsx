@@ -12,10 +12,12 @@ const useStyle = makeStyles((theme: ITheme) => ({
   input: {
     border: 'none',
     borderRadius: 4,
+    padding: '4px 12px',
     height: 50,
     width: '100%',
     fontSize: 24,
     fontFamily: "'Balsamiq Sans', 'Helvetica', 'Arial', sans-serif",
+    color: theme.palette.secondaryDark,
   },
   label: {
     fontSize: 16,

@@ -4,8 +4,13 @@ import {
   STORE_CHANNEL,
   RECEIVE_WORD,
   GameReducerActions,
+  RESET_LOBBY,
+  UPDATE_QUESTIONING,
+  START_VOTE,
+  END_GAME,
+  SHOW_RESULTS,
 } from './actionTypes';
-import { Player } from '../../shared/interfaces';
+import { Player, Question, Score, Vote } from '../../shared/interfaces';
 import { Channel } from 'phoenix';
 
 export interface IAction {
@@ -24,14 +29,48 @@ export interface IGameReducer {
   word: string;
   lobbyMaster?: number;
   wordReceived: boolean;
+  votingStarted?: boolean;
   channel?: Channel;
+  questioneer?: Player | null;
+  answereer?: Player | null;
+  question?: Question | null;
+  scores?: Score[];
+  words?: string[];
+  votes?: Vote[];
 }
 
 export const reducer = (
-  state = initialState,
+  state: IGameReducer = initialState,
   { type, payload }: IAction
 ): IGameReducer => {
   switch (type) {
+    case SHOW_RESULTS:
+      return {
+        ...state,
+        ...payload,
+      };
+    case END_GAME:
+      return {
+        ...state,
+        wordReceived: false,
+        votingStarted: false,
+        questioneer: null,
+        answereer: null,
+        question: null,
+        word: 'NONE',
+        players: state.players?.map((p) => ({ id: p.id, name: p.name })),
+      };
+    case START_VOTE:
+      return { ...state, votingStarted: true, words: payload };
+    case UPDATE_QUESTIONING:
+      return {
+        ...state,
+        questioneer: payload.questioneer,
+        answereer: payload.answereer,
+        question: payload.question,
+      };
+    case RESET_LOBBY:
+      return initialState;
     case RECEIVE_WORD:
       if (payload) {
         return { ...state, word: payload, wordReceived: true };
@@ -44,6 +83,12 @@ export const reducer = (
         ...state,
         players: payload.players,
         lobbyMaster: payload.lobbyMaster,
+        questioneer: payload.questioneer,
+        answereer: payload.answereer,
+        question: payload.question,
+        votingStarted: payload.votingStarted,
+        words: payload.words,
+        scores: payload.scores,
       };
     case UPDATE_LOBBY_PLAYERS:
       return {

@@ -15,7 +15,7 @@ defmodule PlayItCool.Scenarios.CreateLobby do
           id: identifier(),
           lowercase_username: String.t()
         }) ::
-          {:ok, Lobby.t()} | {:error, any()}
+          {:ok, Lobby.t()} | {:error, any}
   def initialize(user) do
     try do
       lobby =
@@ -90,6 +90,6 @@ defmodule PlayItCool.Scenarios.CreateLobby do
 
   defp set_lobby_state_to_error(_errors) do
     # TODO: make this thing
-    raise "Function not implemented"
+    IO.inspect("Function not implemented")
   end
 end

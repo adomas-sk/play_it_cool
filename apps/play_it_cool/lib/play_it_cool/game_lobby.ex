@@ -123,13 +123,24 @@ defmodule PlayItCool.GameLobby do
       Enum.find(new_state.current_game.question_queue, fn q -> !Map.has_key?(q, :answered) end)
 
     if next_question do
-      send_next_question(next_question)
+      send_next_question(next_question, state.lobby_token)
       {:noreply, new_state}
     else
-      {:noreply,
-       Map.update(new_state, :current_game, new_state.current_game, fn game ->
-         Map.put_new(game, :votes, [])
-       end)}
+      state_with_votes =
+        new_state
+        |> Map.update(:current_game, new_state.current_game, fn game ->
+          Map.put_new(game, :votes, [])
+        end)
+
+      words_to_guess =
+        [new_state.current_game.word | new_state.current_game.guessable_words]
+        |> Enum.shuffle()
+
+      PlayItCoolWeb.Endpoint.broadcast("lobby:#{new_state.lobby_token}", "vote", %{
+        words: words_to_guess
+      })
+
+      {:noreply, state_with_votes}
     end
   end
 
@@ -149,7 +160,7 @@ defmodule PlayItCool.GameLobby do
       end)
 
     if Enum.all?(new_state.players, fn player -> Map.has_key?(player, :confirmed) end) do
-      send_next_question(Enum.at(new_state.current_game.question_queue, 0))
+      send_next_question(Enum.at(new_state.current_game.question_queue, 0), state.lobby_token)
     end
 
     {:noreply, new_state}
@@ -163,6 +174,8 @@ defmodule PlayItCool.GameLobby do
 
       true ->
         playing_it_cool = Enum.random(state.players)
+
+        IO.inspect(game_data, label: "GAME DATA")
 
         full_game_data =
           game_data
@@ -221,7 +234,6 @@ defmodule PlayItCool.GameLobby do
         get_reset_state(state)
 
       true ->
-        IO.puts("Continue")
         {:noreply, state}
     end
   end
@@ -252,11 +264,19 @@ defmodule PlayItCool.GameLobby do
         end
       end)
 
+    IO.inspect(scores, label: "NEW SCORES")
+
+    next_scores = get_next_scores(Map.has_key?(state, :scores), scores, state)
+
+    broadcast_game_ending(state.lobby_token, votes, playing_it_cool, word, next_scores)
+
     reset_state = %{
       players: Enum.map(players, fn p -> %{id: p.id, name: p.name, token: p.token} end),
       lobby_master: state.lobby_master,
+      lobby_id: state.lobby_id,
+      lobby_token: state.lobby_token,
       games: games,
-      scores: get_next_scores(Map.has_key?(state, :scores), scores, votes)
+      scores: next_scores
     }
 
     PlayItCool.Scenarios.EndGame.end_game(lobby_id, game_id, reset_state.scores)
@@ -264,16 +284,51 @@ defmodule PlayItCool.GameLobby do
     {:noreply, reset_state}
   end
 
-  defp get_next_scores(has_scores?, scores, votes) do
+  defp broadcast_game_ending(lobby_token, votes, playing_it_cool, word, scores) do
+    formatted_votes =
+      Enum.map(votes, fn v ->
+        if Map.has_key?(v, :voted_for_word) do
+          %{playerId: v.player_id, votedForWord: v.voted_for_word}
+        else
+          %{votedWhoPlayedCool: v.voted_who_played_cool, playerId: v.player_id}
+        end
+      end)
+
+    {_, formatted_player} = Map.pop(playing_it_cool, nil, :token)
+
+    formatted_scores =
+      scores
+      |> Enum.map(fn {player_id, score} ->
+        %{playerId: player_id, score: score}
+      end)
+
+    PlayItCoolWeb.Endpoint.broadcast(
+      "lobby:#{lobby_token}",
+      "ending",
+      %{
+        votes: formatted_votes,
+        playingItCool: formatted_player,
+        word: word,
+        scores: formatted_scores
+      }
+    )
+  end
+
+  defp get_next_scores(has_scores?, scores, state) do
+    IO.inspect("PROBLEM HERE?")
+    IO.inspect(scores)
+
     case has_scores? do
       true ->
+        IO.inspect(state.scores, label: "OLD SCORES")
+
         scores
         |> Enum.map(fn {player_id, score} ->
-          {_, prev_score} =
-            votes
+          %{player_id: _, score: previous_score} =
+            state.scores
             |> Enum.find(fn v -> v.player_id == player_id end)
 
-          {player_id, score + prev_score}
+          {player_id, score + previous_score}
         end)
 
       false ->
@@ -323,12 +378,18 @@ defmodule PlayItCool.GameLobby do
     end
   end
 
-  defp send_next_question(%{questioneer: questioneer, question: question, answereer: answereer}) do
-    IO.inspect(questioneer)
-    IO.inspect(question)
-    IO.inspect(answereer)
+  defp send_next_question(
+         %{questioneer: questioneer, question: question, answereer: answereer},
+         lobby_token
+       ) do
+    {_, safe_questioneer} = Map.pop!(questioneer, :token)
+    {_, safe_answereer} = Map.pop!(answereer, :token)
 
-    IO.puts("SENDING QUESTION")
+    PlayItCoolWeb.Endpoint.broadcast(
+      "lobby:#{lobby_token}",
+      "questioning",
+      %{questioneer: safe_questioneer, answereer: safe_answereer, question: question}
+    )
   end
 
   defp create_question_queue(questions, players) do

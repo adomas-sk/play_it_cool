@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { IRootStore } from '../../../shared/store';
 import Button from '../../../components/Button';
 import { ITheme } from '../../../shared/theme';
+import { confirmWord } from '../actions';
 
 const useStyle = makeStyles((theme: ITheme) => ({
   wordDisplay: {
     margin: 'auto',
     padding: 24,
-    backgroundColor: theme.palette.secondaryDark,
+    backgroundColor: theme.palette.secondaryTint,
     borderRadius: 5,
   },
   bold: {
@@ -25,10 +26,19 @@ interface IConfirmationProps {
 
 const Confirmation: React.FC<IConfirmationProps> = ({ nextStage }) => {
   const word = useSelector((store: IRootStore) => store.game.word);
+  const questioneer = useSelector(
+    (store: IRootStore) => store.game.questioneer
+  );
   const classes = useStyle();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (questioneer) {
+      nextStage();
+    }
+  }, [questioneer]);
 
   const renderWord = () => {
-    console.log(word);
     if (word === 'NONE') {
       return (
         <div>
@@ -51,7 +61,7 @@ const Confirmation: React.FC<IConfirmationProps> = ({ nextStage }) => {
   return (
     <>
       <div className={classes.wordDisplay}>{renderWord()}</div>
-      <Button label="Confirm" onClick={() => console.log('XD?')} />
+      <Button label="Confirm" onClick={() => dispatch(confirmWord())} />
     </>
   );
 };

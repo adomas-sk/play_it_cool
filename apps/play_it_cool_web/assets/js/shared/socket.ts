@@ -6,8 +6,11 @@ import {
   UPDATE_LOBBY_PLAYERS,
   STORE_CHANNEL,
   RECEIVE_WORD,
+  START_VOTE,
+  SHOW_RESULTS,
+  UPDATE_QUESTIONING,
 } from '../web/game/actionTypes';
-import { Player } from './interfaces';
+import { Player, Question, Vote, Score } from './interfaces';
 
 export let socket: Socket;
 
@@ -23,19 +26,51 @@ const initSocket = (lobbyToken: number, successCallback?: () => void) => {
   store.dispatch({ type: STORE_CHANNEL, payload: channel });
   channel
     .join()
-    .receive('ok', (resp: { players: Player[]; lobbyMaster: number }) => {
-      console.log('Joined lobby channel successfully');
-      store.dispatch({ type: UPDATE_LOBBY_STATE, payload: resp });
-      if (successCallback) {
-        successCallback();
+    .receive(
+      'ok',
+      (resp: {
+        players: Player[];
+        lobbyMaster: number;
+        questioneer?: Player;
+        answereer?: Player;
+      }) => {
+        console.log('Joined lobby channel successfully', resp);
+        store.dispatch({ type: UPDATE_LOBBY_STATE, payload: resp });
+        if (successCallback) {
+          successCallback();
+        }
       }
-    })
+    )
     .receive('error', (resp) => {
       console.log('Unable to join', resp);
     });
   channel.on('player_update', (message: { players: Player[] }) => {
     store.dispatch({ type: UPDATE_LOBBY_PLAYERS, payload: message.players });
   });
+  channel.on(
+    'questioning',
+    (message: {
+      questioneer: Player;
+      answereer: Player;
+      question: Question;
+    }) => {
+      store.dispatch({ type: UPDATE_QUESTIONING, payload: message });
+    }
+  );
+  channel.on('vote', (message: { words: string[] }) => {
+    store.dispatch({ type: START_VOTE, payload: message.words });
+  });
+  channel.on(
+    'ending',
+    (message: {
+      votes: Vote;
+      playingItCool: Player;
+      word: string;
+      scores: Score;
+    }) => {
+      store.dispatch({ type: SHOW_RESULTS, payload: message });
+    }
+  );
 
   return socket;
 };

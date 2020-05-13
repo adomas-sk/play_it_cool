@@ -12,6 +12,8 @@ defmodule PlayItCool.Scenarios.StartGame do
   def start_game(lobby_token, subject) do
     case fetch_lobby(lobby_token) do
       {:error, message} ->
+        IO.inspect("HELLO?")
+        IO.inspect(message)
         {:error, message}
 
       lobby ->
@@ -37,7 +39,7 @@ defmodule PlayItCool.Scenarios.StartGame do
 
   defp get_game_questions(
          {%Lobby{id: lobby_id, lobby_token: lobby_token}, %Game{subject_id: subject_id} = game,
-          word}
+          word, guessable_words}
        ) do
     questions =
       from(question in Question, where: question.subject_id == ^subject_id)
@@ -51,16 +53,18 @@ defmodule PlayItCool.Scenarios.StartGame do
       questions
       |> Enum.take_random(length(players) * 2)
 
-    {game, game_questions, lobby_token, word}
+    {game, game_questions, lobby_token, word, guessable_words}
   end
 
   defp get_game_word({lobby, %Game{subject_id: subject_id} = game}) do
-    word =
+    [word | guessable_words] =
       from(w in Word, where: w.subject_id == ^subject_id)
       |> Repo.all()
-      |> Enum.random()
+      |> Enum.shuffle()
+      |> Enum.take(5)
+      |> Enum.map(& &1.word)
 
-    {lobby, game, word.word}
+    {lobby, game, word, guessable_words}
   end
 
   defp add_game_start_event(
@@ -86,11 +90,14 @@ defmodule PlayItCool.Scenarios.StartGame do
     {lobby, game}
   end
 
-  defp send_data_to_game_lobby_process({%Game{id: game_id}, questions, lobby_token, word}) do
+  defp send_data_to_game_lobby_process(
+         {%Game{id: game_id}, questions, lobby_token, word, guessable_words}
+       ) do
     %{
       questions: Enum.map(questions, fn q -> %{question: q.question, id: q.id} end),
       id: game_id,
-      word: word
+      word: word,
+      guessable_words: guessable_words
     }
     |> PlayItCool.GameLobby.start_new_game(Integer.to_string(lobby_token))
   end
@@ -99,7 +106,7 @@ defmodule PlayItCool.Scenarios.StartGame do
   defp fetch_lobby(lobby_token) do
     case from(lobby in Lobby,
            where: lobby.lobby_token == ^lobby_token,
-           where: lobby.state == "INIT"
+           where: lobby.state in ["INIT", "WAITING"]
          )
          |> Repo.one() do
       nil ->
