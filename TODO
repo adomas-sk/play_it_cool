@@ -4,15 +4,15 @@ graphQL:
 websocket:
   ✔ updates about someone joining the lobby @done(20-05-13 00:42)
   ✔ start game @done(20-05-13 00:42)
-  ☐ confirm word/that you're cool
-  ☐ answer question
-  ☐ vote
+  ✔ confirm word/that you're cool @done(20-05-14 00:42)
+  ✔ answer question @done(20-05-14 00:42)
+  ✔ vote @done(20-05-14 00:42)
 
 handle WS disconnection:
   ☐ when confirming
   ☐ when answering
   ☐ when voting
-  ☐ when in lobby
+  ✔ when in lobby @done(20-05-14 00:46)
 
 things to fix:
   ☐ lobby process should timeout after 1min of inactivity
@@ -20,3 +20,9 @@ things to fix:
 refactoring:
   ☐ Make game lobby process state a module struct and move state changing to that module
   ☐ Tests after making VIP
+
+Notes about project:
+  Only now tham I am close to the end I realize how to use the "let it crash" part of Elixir.
+  Most of the code in here is way too defensive. I should have cared less about possible errors. If a user does something unexpected and crashes the lobby process, they could just start a new lobby, their lobby might have crashed, but at least other people are not affected, and I shouldn't really care about some user pretending to be QA
+
+  Also now I can't write JS with single qoutes, thank god for prettier and format on save.
