@@ -5,7 +5,6 @@ defmodule PlayItCool.Scenarios.AnswerQuestion do
   def answer_question(lobby_token, question_id, player_id) do
     case question_in_lobby?(lobby_token, question_id, player_id) do
       {:error, message} ->
-        IO.inspect(message)
         {:error, message}
 
       {state, answereer} ->
@@ -41,10 +40,6 @@ defmodule PlayItCool.Scenarios.AnswerQuestion do
                 {state, answereer}
 
               true ->
-                IO.inspect(questioneer)
-                IO.inspect(player_id)
-                IO.inspect(question)
-                IO.inspect(question_id)
                 {:error, "Error occurred while answering question"}
             end
 

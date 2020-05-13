@@ -5,6 +5,7 @@ import {
   RESET_LOBBY,
   QUESTION_MARKED_AS_CONFIRMED,
   VOTED,
+  END_GAME,
 } from './actionTypes';
 import { Channel } from 'phoenix';
 import { IRootStore } from '../../shared/store';
@@ -76,5 +77,20 @@ export const vote = (vote: string) => (
 
   dispatch({
     type: VOTED,
+  });
+};
+
+export const ready = () => (dispatch: Dispatch, getState: () => IRootStore) => {
+  const channel = getState().game.channel;
+  if (!channel) {
+    throw new Error('Channel is not defined in markQuestionAsAnswered call');
+  }
+
+  channel.push('ready', {
+    token: localStorage.getItem('channelToken'),
+  });
+
+  dispatch({
+    type: END_GAME,
   });
 };

@@ -7,17 +7,27 @@ import { useLocation } from 'react-router-dom';
 
 const useStyle = makeStyles((theme: ITheme) => ({
   container: {
-    width: '100%',
+    width: `calc(100% - ${theme.sizes.contentBackgroundSpacing * 2})`,
     minHeight: '100vh',
     backgroundColor: theme.palette.secondary,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    padding: `0 ${theme.sizes.contentBackgroundSpacing}px`,
+  },
+  childrenWrapper: {
+    backgroundColor: theme.palette.tint,
+    boxShadow: '0px 0px 10px 3px rgba(0,0,0,0.75)',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: theme.sizes.contentBackgroundSpacing,
+    height: '100%',
+    width: '100%',
   },
   childrenContainer: {
-    backgroundColor: theme.palette.tint,
     maxWidth: 1096,
-    margin: theme.sizes.contentBackgroundSpacing,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -32,7 +42,6 @@ const useStyle = makeStyles((theme: ITheme) => ({
   introBackground: {
     // background: 'url("/images/space.gif")',
     background: 'url("/images/staticBackground.svg")',
-    // background: 'url("/images/pattern.gif")',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
   },
@@ -60,9 +69,13 @@ const Layout: React.FC<ILayoutProps> = ({ children }) => {
   });
 
   return (
-    <div className={containerClassName}>
-      <div className={classes.childrenContainer}>{children}</div>
-      <Footer />
+    <div>
+      <div className={containerClassName}>
+        <div className={classes.childrenContainer}>
+          <div className={classes.childrenWrapper}>{children}</div>
+        </div>
+        <Footer />
+      </div>
     </div>
   );
 };

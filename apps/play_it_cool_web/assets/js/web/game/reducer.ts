@@ -34,9 +34,7 @@ export interface IGameReducer {
   questioneer?: Player | null;
   answereer?: Player | null;
   question?: Question | null;
-  scores?: Score[];
   words?: string[];
-  votes?: Vote[];
 }
 
 export const reducer = (
@@ -58,7 +56,12 @@ export const reducer = (
         answereer: null,
         question: null,
         word: 'NONE',
-        players: state.players?.map((p) => ({ id: p.id, name: p.name })),
+        players: state.players?.map((p) => ({
+          id: p.id,
+          name: p.name,
+          score: p.score,
+          ready: p.ready,
+        })),
       };
     case START_VOTE:
       return { ...state, votingStarted: true, words: payload };
@@ -88,7 +91,6 @@ export const reducer = (
         question: payload.question,
         votingStarted: payload.votingStarted,
         words: payload.words,
-        scores: payload.scores,
       };
     case UPDATE_LOBBY_PLAYERS:
       return {

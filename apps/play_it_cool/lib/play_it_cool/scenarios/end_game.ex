@@ -3,7 +3,7 @@ defmodule PlayItCool.Scenarios.EndGame do
 
   alias PlayItCool.{Repo, Lobby, Event}
 
-  def end_game(lobby_id, game_id, scores) do
+  def end_game(lobby_id, game_id, players) do
     lobby =
       from(l in Lobby, where: l.id == ^lobby_id)
       |> Repo.one()
@@ -13,8 +13,8 @@ defmodule PlayItCool.Scenarios.EndGame do
     |> Repo.update!()
 
     event_details =
-      scores
-      |> Enum.map(fn {player_id, score} -> "player:#{player_id}_has_total_score_of:#{score}" end)
+      players
+      |> Enum.map(fn player -> "player:#{player.id}_has_total_score_of:#{player.score}" end)
       |> Enum.join("-")
 
     %Event{}

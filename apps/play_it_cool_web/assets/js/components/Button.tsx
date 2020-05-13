@@ -35,8 +35,8 @@ const useStyle = makeStyles((theme: ITheme) => ({
 }));
 
 interface IButtonProps {
-  label: string;
-  onClick: (e?: React.MouseEvent) => void;
+  label: string | number;
+  onClick?: (e?: React.MouseEvent) => void;
   disabled?: boolean;
   fullWidth?: boolean;
 }

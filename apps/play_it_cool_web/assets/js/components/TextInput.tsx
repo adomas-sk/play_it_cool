@@ -9,6 +9,10 @@ const useStyle = makeStyles((theme: ITheme) => ({
     maxWidth: 400,
     margin: 4,
   },
+  inputWrapper: {
+    width: '100%',
+    maxWidth: 400,
+  },
   input: {
     border: 'none',
     borderRadius: 4,
@@ -18,6 +22,7 @@ const useStyle = makeStyles((theme: ITheme) => ({
     fontSize: 24,
     fontFamily: "'Balsamiq Sans', 'Helvetica', 'Arial', sans-serif",
     color: theme.palette.secondaryDark,
+    boxSizing: 'border-box',
   },
   label: {
     fontSize: 16,
@@ -50,13 +55,15 @@ const TextInput: React.FC<ITextInputProps> = ({
   const usedValue = shouldUseOuterValue === '' ? outerValue : value;
   return (
     <div className={classes.inputContainer}>
-      <div className={classes.label}>{label}</div>
-      <input
-        className={classes.input}
-        type="text"
-        value={usedValue}
-        onChange={(e) => onChangeCallback(e.target.value)}
-      />
+      <div className={classes.inputWrapper}>
+        <div className={classes.label}>{label}</div>
+        <input
+          className={classes.input}
+          type="text"
+          value={usedValue}
+          onChange={(e) => onChangeCallback(e.target.value)}
+        />
+      </div>
     </div>
   );
 };

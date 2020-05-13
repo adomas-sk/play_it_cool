@@ -5,7 +5,7 @@ import Button from './Button';
 
 const useStyle = makeStyles((theme: ITheme) => ({
   listContainer: {
-    height: 'calc(100% - 180px)',
+    height: '100%',
     width: '100%',
     maxWidth: 600,
     display: 'flex',
@@ -17,6 +17,9 @@ const useStyle = makeStyles((theme: ITheme) => ({
     width: '100%',
     background: theme.palette.secondaryTint,
     marginBottom: 8,
+    display: 'flex',
+    justifyContent: 'space-between',
+    boxShadow: `0px 0px 10px 3px ${theme.palette.tint}`,
 
     '&:hover': {
       color: theme.palette.primary,
@@ -25,7 +28,8 @@ const useStyle = makeStyles((theme: ITheme) => ({
 }));
 
 type Item = {
-  label: string;
+  label: string | number;
+  right?: string | number;
   key: string | number;
   onClick?: () => void;
 };
@@ -66,7 +70,8 @@ const List: React.FC<IListProps> = ({ itemList = [], loading, buttons }) => {
     <div className={classes.listContainer}>
       {itemList.map((item) => (
         <div className={classes.listItem} key={item.key}>
-          {item.label}
+          <div>{item.label}</div>
+          <div>{item.right}</div>
         </div>
       ))}
     </div>

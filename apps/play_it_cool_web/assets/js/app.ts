@@ -9,5 +9,5 @@ import App from './App';
 
 const app = document.getElementById('app');
 if (app) {
-	ReactDOM.render(React.createElement(App), app);
+  ReactDOM.render(React.createElement(App), app);
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -13,6 +13,7 @@ const useStyle = makeStyles((theme: ITheme) => ({
     padding: 24,
     backgroundColor: theme.palette.secondaryTint,
     borderRadius: 5,
+    boxShadow: `0px 0px 10px 3px ${theme.palette.tint}`,
   },
   bold: {
     color: theme.palette.primary,
@@ -25,6 +26,7 @@ interface IConfirmationProps {
 }
 
 const Confirmation: React.FC<IConfirmationProps> = ({ nextStage }) => {
+  const [confirmed, setConfirmed] = useState(false);
   const word = useSelector((store: IRootStore) => store.game.word);
   const questioneer = useSelector(
     (store: IRootStore) => store.game.questioneer
@@ -50,9 +52,9 @@ const Confirmation: React.FC<IConfirmationProps> = ({ nextStage }) => {
     } else {
       return (
         <div>
-          The word is:
+          You know the word! The word is:
           <br />
-          <strong>{word.toUpperCase()}</strong>
+          <strong className={classes.bold}>{word.toUpperCase()}</strong>
         </div>
       );
     }
@@ -61,7 +63,17 @@ const Confirmation: React.FC<IConfirmationProps> = ({ nextStage }) => {
   return (
     <>
       <div className={classes.wordDisplay}>{renderWord()}</div>
-      <Button label="Confirm" onClick={() => dispatch(confirmWord())} />
+      {confirmed ? (
+        <Button label="Waiting for other players..." disabled />
+      ) : (
+        <Button
+          label="Confirm"
+          onClick={() => {
+            dispatch(confirmWord());
+            setConfirmed(true);
+          }}
+        />
+      )}
     </>
   );
 };

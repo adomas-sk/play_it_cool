@@ -34,18 +34,17 @@ const initSocket = (lobbyToken: number, successCallback?: () => void) => {
         questioneer?: Player;
         answereer?: Player;
       }) => {
-        console.log('Joined lobby channel successfully', resp);
         store.dispatch({ type: UPDATE_LOBBY_STATE, payload: resp });
         if (successCallback) {
           successCallback();
         }
       }
     )
-    .receive('error', (resp) => {
-      console.log('Unable to join', resp);
+    .receive('error', (_resp) => {
+      console.log('Unable to join lobby channel');
     });
   channel.on('player_update', (message: { players: Player[] }) => {
-    store.dispatch({ type: UPDATE_LOBBY_PLAYERS, payload: message.players });
+    store.dispatch({ type: UPDATE_LOBBY_PLAYERS, payload: message });
   });
   channel.on(
     'questioning',
@@ -91,11 +90,11 @@ export const initializeUserSocket = () => {
   );
   channel
     .join()
-    .receive('ok', (_resp) => {
-      console.log('Joined user channel successfully');
-    })
+    // .receive('ok', (_resp) => {
+    //   console.log('Joined user channel successfully');
+    // })
     .receive('error', (resp) => {
-      console.log('Unable to join', resp);
+      console.log('Unable to join user channel', resp);
     });
   channel.on('word', (message: { word: string | null }) => {
     store.dispatch({ type: RECEIVE_WORD, payload: message.word });

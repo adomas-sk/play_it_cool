@@ -5,14 +5,10 @@ defmodule PlayItCool.Scenarios.Confirmation do
   def confirm(lobby_token, player_name) do
     case player_playing_it_cool?(player_name, lobby_token) do
       {:playing_it_cool, state, player} ->
-        IO.inspect(state)
-
         add_confirmation_event(state, player, "CONFIRM_COOL")
         |> send_update_to_game_lobby_process(lobby_token)
 
       {:knows_word, state, player} ->
-        IO.inspect(state)
-
         add_confirmation_event(state, player, "CONFIRM_WORD")
         |> send_update_to_game_lobby_process(lobby_token)
 

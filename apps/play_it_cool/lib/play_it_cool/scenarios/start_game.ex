@@ -12,8 +12,6 @@ defmodule PlayItCool.Scenarios.StartGame do
   def start_game(lobby_token, subject) do
     case fetch_lobby(lobby_token) do
       {:error, message} ->
-        IO.inspect("HELLO?")
-        IO.inspect(message)
         {:error, message}
 
       lobby ->

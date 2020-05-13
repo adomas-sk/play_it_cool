@@ -3,6 +3,25 @@ import { useSelector, useDispatch } from 'react-redux';
 import { IRootStore } from '../../../shared/store';
 import Button from '../../../components/Button';
 import { markQuestionAsAnswered } from '../actions';
+import { makeStyles } from '@material-ui/styles';
+import { ITheme } from '../../../shared/theme';
+
+const useStyle = makeStyles((theme: ITheme) => ({
+  question: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    padding: 24,
+    margin: 'auto',
+    backgroundColor: theme.palette.secondaryTint,
+    boxShadow: `0px 0px 10px 3px ${theme.palette.tint}`,
+    borderRadius: 4,
+
+    '& strong': {
+      color: theme.palette.primary,
+    },
+  },
+}));
 
 interface IQuestioningProps {
   nextStage: () => void;
@@ -19,42 +38,38 @@ const Questioning: React.FC<IQuestioningProps> = ({ nextStage }) => {
   );
   const dispatch = useDispatch();
 
+  const classes = useStyle();
+
   useEffect(() => {
     if (votingStarted) {
       nextStage();
     }
   }, [votingStarted]);
 
-  const showQuestioningBoard = () => {
-    const currentUsername = localStorage.getItem('currentUsername');
-    if (currentUsername == questioneer?.name && question && answereer) {
-      return (
-        <div>
-          You're asking {answereer.name}!<br /> Question: <br />
+  const currentUsername = localStorage.getItem('currentUsername');
+  if (currentUsername == questioneer?.name && question && answereer) {
+    return (
+      <>
+        <div className={classes.question}>
+          You're asking {answereer.name}!
+          <br />
           <strong>{question.question}</strong>
-          <Button
-            label="Mark as Answered"
-            onClick={() => dispatch(markQuestionAsAnswered(question.id))}
-          />
         </div>
-      );
-    }
-    if (questioneer && answereer) {
-      return (
-        <div>
-          {questioneer.name} is asking {answereer.name}
-        </div>
-      );
-    }
-    return <div>Loading...</div>;
-  };
-
-  return (
-    <div>
-      We are questioning stuff
-      {showQuestioningBoard()}
-    </div>
-  );
+        <Button
+          label="Mark as Answered"
+          onClick={() => dispatch(markQuestionAsAnswered(question.id))}
+        />
+      </>
+    );
+  }
+  if (questioneer && answereer) {
+    return (
+      <div className={classes.question}>
+        {questioneer.name} is asking {answereer.name}
+      </div>
+    );
+  }
+  return <div>Loading...</div>;
 };
 
 export default Questioning;

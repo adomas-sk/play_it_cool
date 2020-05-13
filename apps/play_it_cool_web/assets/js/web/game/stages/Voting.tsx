@@ -16,8 +16,10 @@ const Voting: React.FC<IVotingProps> = ({ nextStage }) => {
 
   if (word === 'NONE' && words) {
     return (
-      <div>
-        Guess what the <strong>word</strong> was:
+      <>
+        <div>
+          Guess what the <strong>word</strong> was:
+        </div>
         <List
           loading={!words.length}
           itemList={words.map((w) => ({
@@ -30,7 +32,7 @@ const Voting: React.FC<IVotingProps> = ({ nextStage }) => {
           }))}
           buttons
         />
-      </div>
+      </>
     );
   }
 
@@ -39,8 +41,10 @@ const Voting: React.FC<IVotingProps> = ({ nextStage }) => {
   );
 
   return (
-    <div>
-      Guess who was <strong>playing cool</strong>:{' '}
+    <>
+      <div>
+        Guess who <strong>didn't know the word</strong>:{' '}
+      </div>
       <List
         loading={false}
         itemList={otherPlayers?.map((p) => ({
@@ -53,7 +57,7 @@ const Voting: React.FC<IVotingProps> = ({ nextStage }) => {
         }))}
         buttons
       />
-    </div>
+    </>
   );
 };
 

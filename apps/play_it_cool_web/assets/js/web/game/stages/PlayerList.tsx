@@ -25,38 +25,23 @@ const useStyle = makeStyles((theme: ITheme) => ({
 
 interface PlayerListProps {
   lobbyToken: number;
-  changeStage: (stage: string) => void;
+  nextStage: () => void;
 }
 
-const PlayerList: React.FC<PlayerListProps> = ({ lobbyToken, changeStage }) => {
+const PlayerList: React.FC<PlayerListProps> = ({ lobbyToken, nextStage }) => {
   const classes = useStyle();
   const isOwner = useSelector((state: IRootStore) => state.lobby.isOwner);
   const players = useSelector((state: IRootStore) => state.game.players) || [];
-  const votingStarted = useSelector(
-    (state: IRootStore) => state.game.votingStarted
-  );
-  const lobbyMaster = useSelector(
-    (state: IRootStore) => state.game.lobbyMaster
-  );
-  const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (lobbyMaster) {
-      const currentUsername = localStorage.getItem('currentUsername');
-      const player = players.find((p) => p.name === currentUsername);
-      if (player && player.id === lobbyMaster) {
-        dispatch({ type: SET_SELF_AS_OWNER_OF_LOBBY });
-      }
+  const renderButton = () => {
+    if (!isOwner) {
+      return null;
     }
-  }, [lobbyMaster]);
-
-  useEffect(() => {
-    if (votingStarted) {
-      changeStage('voting');
-    } else if (players.length && players.every((p) => p?.confirmed)) {
-      changeStage('questioning');
+    if (!players.every((p) => p.ready)) {
+      return <Button label="Waiting for other players..." disabled />;
     }
-  }, [players]);
+    return <Button label="Start Game" onClick={() => nextStage()} />;
+  };
 
   return (
     <>
@@ -71,11 +56,10 @@ const PlayerList: React.FC<PlayerListProps> = ({ lobbyToken, changeStage }) => {
         itemList={players.map((player) => ({
           key: player.id,
           label: player.name,
+          right: player.score,
         }))}
       />
-      {isOwner && (
-        <Button label="Start Game" onClick={() => changeStage('topic')} />
-      )}
+      {renderButton()}
     </>
   );
 };

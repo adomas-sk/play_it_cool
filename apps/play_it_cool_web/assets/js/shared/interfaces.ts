@@ -1,6 +1,8 @@
 export type Player = {
   id: number;
   confirmed?: boolean;
+  score: number;
+  ready: boolean;
   name: string;
 };
 

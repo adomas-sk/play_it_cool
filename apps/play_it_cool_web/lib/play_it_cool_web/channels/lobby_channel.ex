@@ -60,7 +60,19 @@ defmodule PlayItCoolWeb.LobbyChannel do
         {:noreply, socket}
 
       _ ->
-        {:error, %{reason: "Invalid token"}}
+        {:reply, %{reason: "Invalid token"}}
+    end
+  end
+
+  def handle_in("ready", %{"token" => token}, socket) do
+    case Phoenix.Token.verify(PlayItCoolWeb.Endpoint, "user auth", token, max_age: 864_000) do
+      {:ok, %{lobby_token: lobby_token, player_name: player_name}} ->
+        PlayItCool.GameLobby.set_player_as_ready(Integer.to_string(lobby_token), player_name)
+
+        {:noreply, socket}
+
+      _ ->
+        {:reply, %{reason: "Invalid token"}}
     end
   end
 
@@ -92,7 +104,7 @@ defmodule PlayItCoolWeb.LobbyChannel do
       {:ok, token_data} ->
         case PlayItCool.GameLobby.get_game_state(Integer.to_string(token_data.lobby_token)) do
           {:error, _message} ->
-            {:error, %{reason: "Invalid message"}}
+            {:reply, %{reason: "Invalid message"}}
 
           lobby_state ->
             player =
