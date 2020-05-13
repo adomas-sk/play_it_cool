@@ -36,7 +36,7 @@ const Lobby: React.FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const username = 'ponasAdomas';
+  const username = 'testuser';
 
   useEffect(() => {
     if (createLobbyData) {
@@ -64,9 +64,7 @@ const Lobby: React.FC = () => {
       <div className={classes.lobbyContainer}>
         <Button
           label="Create Lobby"
-          onClick={() =>
-            createLobby({ variables: { id: '1', username: 'ponasAdomas' } })
-          }
+          onClick={() => createLobby({ variables: { id: '1', username } })}
         />
         <div className={classes.divider} />
         <TextInput label="Lobby Token" onChange={setLobbyToken} />

@@ -11,17 +11,23 @@ Prerequisites:
 - docker
 - docker-compose
 
-```bash
+```
   # at root of project
   mix deps.get
-  cd apps/play_it_cool_web/assets
-  npm i
+  docker-compose -f docker-compose.dev.yml up -d
+  mix ecto.migrate
+```
+
+To populate database for testing
+
+```
+  mix apps/play_it_cool/priv/repo/seeds.exs
 ```
 
 ## Running project
 
-```bash
-  docker-compose -f docker-compose.dev.yml up -d
+```
+  # at root of project
   iex -S mix phx.server # of if you don't want iex for debuging: mix phx.server
 ```
 

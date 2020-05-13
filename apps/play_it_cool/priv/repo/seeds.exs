@@ -12,9 +12,9 @@
 
 PlayItCool.Repo.insert!(%PlayItCool.User{
   email: "test@test.com",
-  password: "password123",
-  username: "ponasAdomas",
-  lowercase_username: "ponasadomas"
+  password: "testpassword",
+  username: "testuser",
+  lowercase_username: "testuser"
 })
 
 subject = PlayItCool.Repo.insert!(%PlayItCool.Subject{label: "food"})
