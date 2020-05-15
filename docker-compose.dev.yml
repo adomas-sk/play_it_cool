@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 
 services:
   postgres:
@@ -6,7 +6,7 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: testuser 
+      POSTGRES_USER: testuser
       POSTGRES_PASSWORD: testpassword
       POSTGRES_DB: play_it_cool_dev
   adminer:
@@ -17,3 +17,19 @@ services:
       ADMINER_DEFAULT_SYSTEM: postgres
       ADMINER_DEFAULT_SERVER: postgres
       ADMINER_DESIGN: nette
+  # playitcool:
+  #   build:
+  #     context: ./
+  #     args:
+  #       DATABASE_URL: ecto://testuser:testpassword@postgres:5432/play_it_cool_dev
+  #       SECRET_KEY_BASE: 32t5rg4387rfg387gtg8we
+  #       PORT: 4000
+  #   environment:
+  #     DATABASE_URL: ecto://testuser:testpassword@postgres:5432/play_it_cool_dev
+  #     SECRET_KEY_BASE: 32t5rg4387rfg387gtg8we
+  #     PORT: 4000
+  #     MIX_ENV: prod
+  #   working_dir: /app
+  #   ports:
+  #     - 4000:4000
+  #   command: ["bin/play_it_cool", "start"]

@@ -1,0 +1,10 @@
+_build/
+.elixir_ls/
+.git/
+.vscode/
+deps/
+terraform/
+
+docker-compose.dev.yml
+README.md
+TODO

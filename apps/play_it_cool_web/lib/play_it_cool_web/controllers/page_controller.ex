@@ -8,4 +8,8 @@ defmodule PlayItCoolWeb.PageController do
   def react(conn, _params) do
     render(conn, "react.html")
   end
+
+  def ping(conn, _params) do
+    json(conn, "pong")
+  end
 end

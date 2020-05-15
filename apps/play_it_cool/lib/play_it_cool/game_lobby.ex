@@ -393,8 +393,8 @@ defmodule PlayItCool.GameLobby do
          %{questioneer: questioneer, question: question, answereer: answereer},
          lobby_token
        ) do
-    {_, safe_questioneer} = Map.pop!(questioneer, :token)
-    {_, safe_answereer} = Map.pop!(answereer, :token)
+    {_, safe_questioneer} = Map.pop(questioneer, :token, nil)
+    {_, safe_answereer} = Map.pop(answereer, :token, nil)
 
     PlayItCoolWeb.Endpoint.broadcast(
       "lobby:#{lobby_token}",

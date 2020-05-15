@@ -35,7 +35,7 @@ config :play_it_cool_web, PlayItCoolWeb.Endpoint,
 # If you are doing OTP releases, you need to instruct Phoenix
 # to start each relevant endpoint:
 #
-#     config :play_it_cool_web, PlayItCoolWeb.Endpoint, server: true
+config :play_it_cool_web, PlayItCoolWeb.Endpoint, server: true
 #
 # Then you can assemble a release by calling `mix release`.
 # See `mix help release` for more information.

@@ -22,3 +22,18 @@ erl_crash.dump
 .elixir_ls/
 
 .vscode/settings.json
+
+**/.terraform/*
+
+*.tfstate
+*.tfstate.*
+
+crash.log
+
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+.terraformrc
+terraform.rc

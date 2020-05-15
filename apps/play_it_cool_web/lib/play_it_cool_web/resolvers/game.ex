@@ -7,10 +7,14 @@ defmodule PlayItCoolWeb.Resolvers.Game do
         {:ok,
          %{
            lobby_auth_token:
-             Phoenix.Token.sign(PlayItCoolWeb.Endpoint, "user auth", %{
-               lobby_token: lobby.lobby_token,
-               player_name: user.username
-             }),
+             Phoenix.Token.sign(
+               PlayItCoolWeb.Endpoint,
+               Application.fetch_env!(:play_it_cool_web, :token_secret),
+               %{
+                 lobby_token: lobby.lobby_token,
+                 player_name: user.username
+               }
+             ),
            lobby_token: lobby.lobby_token,
            id: lobby.id
          }}
@@ -26,10 +30,14 @@ defmodule PlayItCoolWeb.Resolvers.Game do
         {:ok,
          %{
            lobby_auth_token:
-             Phoenix.Token.sign(PlayItCoolWeb.Endpoint, "user auth", %{
-               lobby_token: lobby.lobby_token,
-               player_name: player_name
-             }),
+             Phoenix.Token.sign(
+               PlayItCoolWeb.Endpoint,
+               Application.fetch_env!(:play_it_cool_web, :token_secret),
+               %{
+                 lobby_token: lobby.lobby_token,
+                 player_name: player_name
+               }
+             ),
            lobby_token: lobby.lobby_token,
            id: lobby.id
          }}

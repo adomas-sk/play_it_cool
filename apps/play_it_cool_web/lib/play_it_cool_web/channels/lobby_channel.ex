@@ -3,7 +3,14 @@ defmodule PlayItCoolWeb.LobbyChannel do
 
   def join("lobby:" <> lobby_token, %{"token" => token}, socket) do
     {:ok, %{lobby_token: descrypted_lobby_token, player_name: player_name}} =
-      Phoenix.Token.verify(PlayItCoolWeb.Endpoint, "user auth", token, max_age: 864_000)
+      Phoenix.Token.verify(
+        PlayItCoolWeb.Endpoint,
+        Application.fetch_env!(:play_it_cool_web, :token_secret),
+        token,
+        max_age: 864_000
+      )
+
+    IO.inspect(Application.fetch_env!(:play_it_cool_web, :token_secret))
 
     unless descrypted_lobby_token == lobby_token do
       {:error, %{reason: "Invalid token"}}
@@ -33,7 +40,12 @@ defmodule PlayItCoolWeb.LobbyChannel do
   end
 
   def join("user:" <> user_id, _params, socket) do
-    case Phoenix.Token.verify(PlayItCoolWeb.Endpoint, "user auth", user_id, max_age: 864_000) do
+    case Phoenix.Token.verify(
+           PlayItCoolWeb.Endpoint,
+           Application.fetch_env!(:play_it_cool_web, :token_secret),
+           user_id,
+           max_age: 864_000
+         ) do
       {:ok, _decrypted_data} ->
         {:ok, socket}
 
@@ -50,7 +62,12 @@ defmodule PlayItCoolWeb.LobbyChannel do
   end
 
   def handle_in("confirmation", %{"token" => token}, socket) do
-    case Phoenix.Token.verify(PlayItCoolWeb.Endpoint, "user auth", token, max_age: 864_000) do
+    case Phoenix.Token.verify(
+           PlayItCoolWeb.Endpoint,
+           Application.fetch_env!(:play_it_cool_web, :token_secret),
+           token,
+           max_age: 864_000
+         ) do
       {:ok, token_data} ->
         PlayItCool.Scenarios.Confirmation.confirm(
           token_data.lobby_token,
@@ -65,7 +82,12 @@ defmodule PlayItCoolWeb.LobbyChannel do
   end
 
   def handle_in("ready", %{"token" => token}, socket) do
-    case Phoenix.Token.verify(PlayItCoolWeb.Endpoint, "user auth", token, max_age: 864_000) do
+    case Phoenix.Token.verify(
+           PlayItCoolWeb.Endpoint,
+           Application.fetch_env!(:play_it_cool_web, :token_secret),
+           token,
+           max_age: 864_000
+         ) do
       {:ok, %{lobby_token: lobby_token, player_name: player_name}} ->
         PlayItCool.GameLobby.set_player_as_ready(Integer.to_string(lobby_token), player_name)
 
@@ -77,7 +99,12 @@ defmodule PlayItCoolWeb.LobbyChannel do
   end
 
   def handle_in("answer", %{"token" => token, "questionId" => question_id}, socket) do
-    case Phoenix.Token.verify(PlayItCoolWeb.Endpoint, "user auth", token, max_age: 864_000) do
+    case Phoenix.Token.verify(
+           PlayItCoolWeb.Endpoint,
+           Application.fetch_env!(:play_it_cool_web, :token_secret),
+           token,
+           max_age: 864_000
+         ) do
       {:ok, token_data} ->
         case PlayItCool.GameLobby.get_game_state(Integer.to_string(token_data.lobby_token)) do
           {:error, _message} ->
@@ -100,7 +127,12 @@ defmodule PlayItCoolWeb.LobbyChannel do
   end
 
   def handle_in("vote", %{"token" => token, "vote" => vote}, socket) do
-    case Phoenix.Token.verify(PlayItCoolWeb.Endpoint, "user auth", token, max_age: 864_000) do
+    case Phoenix.Token.verify(
+           PlayItCoolWeb.Endpoint,
+           Application.fetch_env!(:play_it_cool_web, :token_secret),
+           token,
+           max_age: 864_000
+         ) do
       {:ok, token_data} ->
         case PlayItCool.GameLobby.get_game_state(Integer.to_string(token_data.lobby_token)) do
           {:error, _message} ->

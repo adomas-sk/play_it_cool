@@ -13,9 +13,8 @@ Prerequisites:
 
 ```
   # at root of project
-  mix deps.get
   docker-compose -f docker-compose.dev.yml up -d
-  mix ecto.migrate
+  mix setup
 ```
 
 To populate database for testing

@@ -18,6 +18,7 @@ defmodule PlayItCoolWeb.Router do
   scope "/", PlayItCoolWeb do
     pipe_through :browser
 
+    get "/ping", PageController, :ping
     get "/", PageController, :index
   end
 

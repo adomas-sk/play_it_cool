@@ -23,7 +23,11 @@ defmodule PlayItCoolWeb.Context do
   end
 
   defp authorize(token) do
-    case Phoenix.Token.verify(PlayItCoolWeb.Endpoint, "user auth", token) do
+    case Phoenix.Token.verify(
+           PlayItCoolWeb.Endpoint,
+           Application.fetch_env!(:play_it_cool_web, :token_secret),
+           token
+         ) do
       {:error, _} ->
         {:error, "Invalid authorization token"}
 

@@ -7,7 +7,13 @@ defmodule PlayItCool.Umbrella.MixProject do
       version: "0.1.0",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      aliases: aliases()
+      aliases: aliases(),
+      releases: [
+        play_it_cool: [
+          version: "0.0.1",
+          applications: [play_it_cool: :permanent, play_it_cool_web: :permanent]
+        ]
+      ]
     ]
   end
 
