@@ -31,3 +31,23 @@ To populate database for testing
 ```
 
 By default project is running on port 4000
+
+## Deployment
+
+This project was made to deploy to DigitalOcean with terraform.
+To run these commands you need terraform installed locally.
+
+You need to have DigitalOcean ssh fingerprint and private access token in your env variables
+
+```
+  export DO_PAT=<your private access token>
+  export DO_SSH_FINGERPRINT=<your ssh fingerprint>
+```
+
+Then cd to terraform dir and execute terraform commands
+
+```
+  cd terraform
+  terraform init
+  terraform apply -var "do_token=${DO_PAT}" -var "pub_key=$HOME/.ssh/id_rsa.pub" -var "pvt_key=$HOME/.ssh/id_rsa" -var "ssh_fingerprint=${DO_SSH_FINGERPRINT}"
+```
