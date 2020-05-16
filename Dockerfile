@@ -37,6 +37,7 @@ RUN mix phx.digest
 WORKDIR /app
 # compile and build release
 RUN mix do compile, release
+RUN mix ecto.migrate
 
 # prepare release image
 FROM alpine:3.11 AS app
