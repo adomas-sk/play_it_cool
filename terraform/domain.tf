@@ -1,5 +1,5 @@
 resource "digitalocean_domain" "default" {
-  name       = "playitcool.io"
+  name       = var.domain_name
   ip_address = digitalocean_loadbalancer.www-lb.ip
 }
 
