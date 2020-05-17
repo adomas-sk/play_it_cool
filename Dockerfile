@@ -37,7 +37,7 @@ RUN mix phx.digest
 WORKDIR /app
 # compile and build release
 RUN mix do compile, release
-RUN mix ecto.create
+
 RUN mix ecto.migrate
 
 # prepare release image
