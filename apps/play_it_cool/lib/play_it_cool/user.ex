@@ -17,5 +17,10 @@ defmodule PlayItCool.User do
     user
     |> cast(attrs, [:email, :username, :password, :lowercase_username])
     |> validate_required([:email, :username, :password, :lowercase_username])
+    |> validate_format(:email, ~r/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/)
+    |> unique_constraint(:email)
+    |> unique_constraint(:lowercase_username)
+    |> validate_length(:password, min: 6, max: 128)
+    |> validate_length(:lowercase_username, min: 6, max: 128)
   end
 end

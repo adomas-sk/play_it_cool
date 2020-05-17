@@ -11,9 +11,7 @@ defmodule PlayItCool.Scenarios.CreateLobby do
 
   @spec initialize(%{
           email: String.t(),
-          username: String.t(),
-          id: identifier(),
-          lowercase_username: String.t()
+          id: identifier()
         }) ::
           {:ok, Lobby.t()} | {:error, any}
   def initialize(user) do
