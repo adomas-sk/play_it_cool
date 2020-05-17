@@ -44,6 +44,7 @@ You need to have DigitalOcean ssh fingerprint and private access token in your e
 ```
   export DO_PAT=<your private access token>
   export DO_SSH_FINGERPRINT=<your ssh fingerprint>
+  export DOMAIN_NAME=<your domain name>
 ```
 
 Then cd to terraform dir and execute terraform commands
@@ -51,5 +52,5 @@ Then cd to terraform dir and execute terraform commands
 ```
   cd terraform
   terraform init
-  terraform apply -var "do_token=${DO_PAT}" -var "pub_key=$HOME/.ssh/id_rsa.pub" -var "pvt_key=$HOME/.ssh/id_rsa" -var "ssh_fingerprint=${DO_SSH_FINGERPRINT}"
+  terraform apply -var "do_token=${DO_PAT}" -var "pub_key=$HOME/.ssh/id_rsa.pub" -var "pvt_key=$HOME/.ssh/id_rsa" -var "ssh_fingerprint=${DO_SSH_FINGERPRINT} -var domain_name=${DOMAIN_NAME}"
 ```

@@ -39,6 +39,7 @@ interface IButtonProps {
   onClick?: (e?: React.MouseEvent) => void;
   disabled?: boolean;
   fullWidth?: boolean;
+  loading?: boolean;
 }
 
 const Button: React.FC<IButtonProps> = ({
@@ -46,6 +47,7 @@ const Button: React.FC<IButtonProps> = ({
   onClick,
   fullWidth,
   disabled = false,
+  loading = false,
 }) => {
   const classes = useStyle();
 
@@ -62,9 +64,10 @@ const Button: React.FC<IButtonProps> = ({
         type="button"
         className={buttonClassName}
         onClick={onClick}
-        disabled={disabled}
+        disabled={disabled || loading}
       >
         {label}
+        {loading ? '...' : ''}
       </button>
     </div>
   );

@@ -36,12 +36,9 @@ const Lobby: React.FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const username = 'testuser';
-
   useEffect(() => {
     if (createLobbyData) {
       const lobbyToken = createLobbyData.createLobby.lobbyToken;
-      localStorage.setItem('currentUsername', username);
       dispatch({ type: SET_SELF_AS_OWNER_OF_LOBBY });
       dispatch(
         joinSocketChannel(createLobbyData.createLobby, () => {
@@ -62,17 +59,12 @@ const Lobby: React.FC = () => {
   return (
     <Layout>
       <div className={classes.lobbyContainer}>
-        <Button
-          label="Create Lobby"
-          onClick={() => createLobby({ variables: { id: '1', username } })}
-        />
+        <Button label="Create Lobby" onClick={() => createLobby()} />
         <div className={classes.divider} />
         <TextInput label="Lobby Token" onChange={setLobbyToken} />
         <TextInput label="Player Name" onChange={setPlayerName} />
         <Button
-          disabled={
-            !RegExp(/^[0-9]{6}$/).test(lobbyToken) || !playerName.length
-          }
+          disabled={!RegExp(/^[0-9]{6}$/).test(lobbyToken) || !playerName.length}
           label="Join Lobby"
           onClick={() =>
             joinLobby({

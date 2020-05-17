@@ -34,12 +34,14 @@ interface ITextInputProps {
   label: string;
   outerValue?: string;
   onChange?: (v: string) => void;
+  password?: boolean;
 }
 
 const TextInput: React.FC<ITextInputProps> = ({
   label,
   outerValue,
   onChange,
+  password = false,
 }) => {
   const classes = useStyle();
   const [value, setValue] = useState('');
@@ -59,7 +61,7 @@ const TextInput: React.FC<ITextInputProps> = ({
         <div className={classes.label}>{label}</div>
         <input
           className={classes.input}
-          type="text"
+          type={password ? 'password' : 'text'}
           value={usedValue}
           onChange={(e) => onChangeCallback(e.target.value)}
         />

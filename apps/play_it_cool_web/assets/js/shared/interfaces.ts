@@ -21,3 +21,9 @@ export type Score = {
   playerId: number;
   score: number;
 };
+
+export type User = {
+  username?: string;
+  lowercase_username?: string;
+  email?: string;
+};

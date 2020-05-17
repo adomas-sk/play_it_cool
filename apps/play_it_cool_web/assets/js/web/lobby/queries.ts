@@ -11,8 +11,8 @@ export interface ICreateLobbyResult {
 }
 
 export const CREATE_LOBBY = gql`
-  mutation createLobby($id: String!, $username: String!) {
-    createLobby(id: $id, username: $username) {
+  mutation createLobby {
+    createLobby {
       id
       lobbyAuthToken
       lobbyToken

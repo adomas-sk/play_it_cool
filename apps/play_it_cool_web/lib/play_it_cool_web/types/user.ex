@@ -8,4 +8,9 @@ defmodule PlayItCoolWeb.Types.User do
     field(:email, :string)
     field(:username, :string)
   end
+
+  object :login do
+    field(:user, :user)
+    field(:token, :string)
+  end
 end

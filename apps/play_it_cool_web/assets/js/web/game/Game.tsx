@@ -23,19 +23,16 @@ const Game = () => {
   const dispatch = useDispatch();
 
   const players = useSelector((state: IRootStore) => state.game.players) || [];
-  const wordReceived = useSelector(
-    (state: IRootStore) => state.game.wordReceived
-  );
-  const questioneer = useSelector(
-    (state: IRootStore) => state.game.questioneer
-  );
+  const wordReceived = useSelector((state: IRootStore) => state.game.wordReceived);
+  const questioneer = useSelector((state: IRootStore) => state.game.questioneer);
+  const votingStarted = useSelector((state: IRootStore) => state.game.votingStarted);
+  const lobbyMaster = useSelector((state: IRootStore) => state.game.lobbyMaster);
 
-  const votingStarted = useSelector(
-    (state: IRootStore) => state.game.votingStarted
-  );
-  const lobbyMaster = useSelector(
-    (state: IRootStore) => state.game.lobbyMaster
-  );
+  useEffect(() => {
+    if (lobbyToken.length !== 6) {
+      history.push('/lobby');
+    }
+  }, []);
 
   useEffect(() => {
     if (lobbyMaster) {
@@ -75,12 +72,7 @@ const Game = () => {
   const renderStages = () => {
     switch (stage) {
       case 'init':
-        return (
-          <PlayerList
-            lobbyToken={lobbyToken}
-            nextStage={() => setStage('topic')}
-          />
-        );
+        return <PlayerList lobbyToken={lobbyToken} nextStage={() => setStage('topic')} />;
       case 'topic':
         return <TopicList nextStage={() => setStage('confirmation')} />;
       case 'confirmation':
@@ -92,12 +84,7 @@ const Game = () => {
       case 'results':
         return <Results nextStage={() => setStage('init')} />;
       default:
-        return (
-          <PlayerList
-            lobbyToken={lobbyToken}
-            nextStage={() => setStage('topic')}
-          />
-        );
+        return <PlayerList lobbyToken={lobbyToken} nextStage={() => setStage('topic')} />;
     }
   };
 
