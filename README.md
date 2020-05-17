@@ -1,6 +1,8 @@
 # PlayItCool.Umbrella
 
-A game project
+A game project.
+Frontend: Typescript, React, Redux, Apollo, Phoenix
+Backend: Elixir, Phoenix, Absinthe, PostgreSQL
 
 ## Setup
 

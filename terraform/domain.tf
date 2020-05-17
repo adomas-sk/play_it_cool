@@ -1,5 +1,5 @@
 resource "digitalocean_domain" "default" {
-  name       = "elimemorate.com"
+  name       = "playitcool.io"
   ip_address = digitalocean_loadbalancer.www-lb.ip
 }
 
