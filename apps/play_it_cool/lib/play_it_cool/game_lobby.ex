@@ -7,6 +7,9 @@ defmodule PlayItCool.GameLobby do
 
   use GenServer
 
+  @init_timeout_ms 1000 * 4
+  @idle_timeout_ms 1000 * 60 * 60
+
   @spec start_link(String.t(), String.t()) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(lobby_token, lobby_id) do
     name = {:via, Registry, {Registry.GameLobbies, lobby_token}}
@@ -19,15 +22,21 @@ defmodule PlayItCool.GameLobby do
       games: []
     }
 
-    GenServer.start_link(__MODULE__, init_state, name: name, timeout: 1000 * 60)
+    GenServer.start_link(__MODULE__, init_state, name: name, timeout: @init_timeout_ms)
   end
 
   @impl true
-  @spec init(any) :: {:ok, any()}
   def init(state) do
     IO.puts("GenServer STARTED")
-
+    Process.send_after(self(), :idle_timeout, @idle_timeout_ms)
     {:ok, state}
+  end
+
+  @impl GenServer
+  def handle_info(:idle_timeout, state) do
+    PlayItCool.Scenarios.CloseLobby.close_lobby(state.lobby_token)
+    Process.exit(self(), :normal)
+    {:noreply, state}
   end
 
   @impl true

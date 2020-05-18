@@ -36,6 +36,15 @@ defmodule PlayItCoolWeb.Router do
     get "/*path", PageController, :react
   end
 
+  # TODO: Make OAuth work
+  # scope "/auth", PlayItCoolWeb do
+  #   pipe_through :browser
+
+  #   get "/", AuthController, :authorize
+  # get "/:provider", AuthController, :index
+  # get "/:provider/callback", AuthController, :callback
+  # end
+
   if Mix.env() in [:dev, :test] do
     import Phoenix.LiveDashboard.Router
 

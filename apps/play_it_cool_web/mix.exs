@@ -24,7 +24,7 @@ defmodule PlayItCoolWeb.MixProject do
   def application do
     [
       mod: {PlayItCoolWeb.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :oauth2]
     ]
   end
 
@@ -50,9 +50,8 @@ defmodule PlayItCoolWeb.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:absinthe, "~> 1.4"},
       {:absinthe_plug, "~> 1.4"},
-      {:poison, "~> 2.1.0"}
-
-      # {:joken, "~> 2.0"}
+      {:poison, "~> 2.1.0"},
+      {:oauth2, "~> 2.0"}
     ]
   end
 

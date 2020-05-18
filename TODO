@@ -17,17 +17,31 @@ handle WS disconnection:
 still left:
   ✔ Register @started(20-05-17 14:37) @done(20-05-17 16:04) @lasted(1h27m14s)
   ✔ Login @done(20-05-17 16:04)
-  ☐ OAuth
+  OAuth:
+    ☐ Google oauth
+    ☐ Facebook oauth
+    ☐ Twitter oauth
 
 things to fix:
   ☐ lobby process should timeout after 1min of inactivity
+  ☐ to make that I need to make client ping every _ms...
 
 refactoring:
   ☐ Make game lobby process state a module struct and move state changing to that module
   ☐ Tests after making VIP
+
+logging:
+  ☐ collect logs from containers somehow
+
+emails:
+  ☐ For recovering emails
+  ☐ Sending notifications about errors
 
 Notes about project:
   Only now tham I am close to the end I realize how to use the "let it crash" part of Elixir.
   Most of the code in here is way too defensive. I should have cared less about possible errors. If a user does something unexpected and crashes the lobby process, they could just start a new lobby, their lobby might have crashed, but at least other people are not affected, and I shouldn't really care about some user pretending to be QA
 
   Also now I can't write JS with single qoutes, thank god for prettier and format on save.
+
+clientID - 955014578307-pbrd9vlvrumqo4moi9vb0lub43gv3aku.apps.googleusercontent.com
+client secret - B9TW5pLLH11WomGSCQ4wzZ1S

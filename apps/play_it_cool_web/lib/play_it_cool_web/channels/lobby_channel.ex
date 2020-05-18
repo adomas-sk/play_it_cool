@@ -10,8 +10,6 @@ defmodule PlayItCoolWeb.LobbyChannel do
         max_age: 864_000
       )
 
-    IO.inspect(Application.fetch_env!(:play_it_cool_web, :token_secret))
-
     unless descrypted_lobby_token == lobby_token do
       {:error, %{reason: "Invalid token"}}
     end
@@ -52,6 +50,11 @@ defmodule PlayItCoolWeb.LobbyChannel do
       _ ->
         {:error, %{reason: "Invalid token"}}
     end
+  end
+
+  def terminate(reason, socket) do
+    IO.inspect(reason)
+    {:noreply, socket}
   end
 
   def handle_in("start_game", %{"topic" => topic}, socket) do

@@ -10,7 +10,7 @@ defmodule PlayItCool.Scenarios.CreateLobby do
   alias PlayItCool.{Lobby, Event, Player, Repo}
 
   @spec initialize(%{
-          email: String.t(),
+          username: String.t(),
           id: identifier()
         }) ::
           {:ok, Lobby.t()} | {:error, any}
