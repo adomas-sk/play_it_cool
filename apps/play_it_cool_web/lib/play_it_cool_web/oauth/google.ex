@@ -10,8 +10,8 @@ defmodule PlayItCoolWeb.OAuth.Google do
   def client do
     OAuth2.Client.new(
       strategy: __MODULE__,
-      client_id: "955014578307-pbrd9vlvrumqo4moi9vb0lub43gv3aku.apps.googleusercontent.com",
-      client_secret: "B9TW5pLLH11WomGSCQ4wzZ1S",
+      client_id: "",
+      client_secret: "",
       redirect_uri: "http://localhost:4000/auth/google/callback",
       site: "https://accounts.google.com",
       authorize_url: "https://accounts.google.com/o/oauth2/auth",
