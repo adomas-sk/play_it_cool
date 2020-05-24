@@ -24,7 +24,7 @@ still left:
 
 things to fix:
   ☐ lobby process should timeout after 1min of inactivity
-  ☐ to make that I need to make client ping every _ms...
+  ☐ client ping every _ms so the game process can timeout
 
 refactoring:
   ☐ Make game lobby process state a module struct and move state changing to that module
@@ -36,6 +36,12 @@ logging:
 emails:
   ☐ For recovering emails
   ☐ Sending notifications about errors
+
+DigitalOcean is expensive:
+  ☐ Deploy to Gigalixir
+
+Eastereggs:
+  ☐ If all the icons that are moving in the background are the same turn them different color
 
 Notes about project:
   Only now tham I am close to the end I realize how to use the "let it crash" part of Elixir.

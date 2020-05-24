@@ -1,9 +1,10 @@
 import React, { ReactChildren, ReactChild } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { ITheme } from '../shared/theme';
-import Footer from './Footer';
 import clsx from 'clsx';
 import { useLocation } from 'react-router-dom';
+import { ITheme } from '../shared/theme';
+import Footer from './Footer';
+import IconAnimation from './IconAnimation';
 
 const useStyle = makeStyles((theme: ITheme) => ({
   container: {
@@ -14,10 +15,10 @@ const useStyle = makeStyles((theme: ITheme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     padding: `0 ${theme.sizes.contentBackgroundSpacing}px`,
+    position: 'relative',
+    zIndex: 1,
   },
   childrenWrapper: {
-    backgroundColor: theme.palette.tint,
-    boxShadow: '0px 0px 10px 3px rgba(0,0,0,0.75)',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -33,20 +34,17 @@ const useStyle = makeStyles((theme: ITheme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: `calc(100vh - (${theme.sizes.footerHeight}px + ${
-      theme.sizes.contentBackgroundSpacing * 4
-    }px))`,
+    height: `calc(100vh - (${theme.sizes.footerHeight}px + ${theme.sizes.contentBackgroundSpacing * 4}px))`,
     borderRadius: 4,
     padding: theme.sizes.contentBackgroundSpacing,
+    position: 'relative',
+    zIndex: 5,
   },
   introBackground: {
-    // background: 'url("/images/space.gif")',
-    background: 'url("/images/staticBackground.svg")',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
   },
   gameBackground: {
-    background: 'url("/images/staticBackground.svg")',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
   },
@@ -69,8 +67,9 @@ const Layout: React.FC<ILayoutProps> = ({ children }) => {
   });
 
   return (
-    <div>
+    <div style={{ position: 'relative' }}>
       <div className={containerClassName}>
+        <IconAnimation />
         <div className={classes.childrenContainer}>
           <div className={classes.childrenWrapper}>{children}</div>
         </div>

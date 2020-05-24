@@ -1,3 +1,20 @@
-<div>
-  <a href="/web">Go to Game</a>
+<div class="main">
+  <div class="hero">
+    <h1>PLAY IT COOL</h1>
+    <p>
+      Fun party game you can play with your phones
+    </p>
+    <a href="/web">Play now</a>
+  </div>
+  <div class="three">
+    <div>
+      See the word and answer the questions as if you don't or pretend that you know and play it cool
+    </div>
+    <div>
+      Vote on who doesn't know the word or what the word was
+    </div>
+    <div>
+      Play mind games with your friends and have fun!
+    </div>
+  </div>
 </div>
