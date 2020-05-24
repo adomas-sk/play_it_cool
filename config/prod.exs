@@ -10,7 +10,11 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :play_it_cool_web, PlayItCoolWeb.Endpoint,
-  url: [host: "playitcool.io", port: 80],
+  load_from_system_env: true,
+  http: [port: {:system, "PORT"}],
+  server: true,
+  secret_key_base: "${SECRET_KEYBASE}",
+  url: [host: "${APP_NAME}.gigalixirapp.com", port: 443],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # ## SSL Support
