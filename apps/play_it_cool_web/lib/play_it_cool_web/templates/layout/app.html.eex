@@ -4,7 +4,19 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="Description" content="Play It Cool - A group guessing game where everyone except one person knows a word and has to pretend he knows it.">
+    <meta name="description" content="Play It Cool - A group guessing game where everyone except one person knows a word and has to pretend he knows it.">
+    <meta name="keywords" content="play it cool, party, game, friends, browser">
+    <meta name="author" content="Adomas Skliutas">
+
+    <meta property="og:title" content="Play It Cool">
+    <meta property="og:description" content="A group guessing game where everyone except one person knows a word and has to pretend he knows it.">
+    <meta property="og:image" content="https://unruly-attached-racer.gigalixirapp.com/images/logo.svg">
+    <meta property="og:url" content="https://unruly-attached-racer.gigalixirapp.com">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta property="og:site_name" content="Play It Cool">
+    <meta name="twitter:image:alt" content="Play It Cool logo">
+
     <title>Play It Cool | Free fun game for everyone</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu&family=Varela+Round&display=swap" rel="stylesheet" />
