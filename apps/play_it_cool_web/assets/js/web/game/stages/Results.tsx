@@ -65,7 +65,7 @@ const Results: React.FC<IResultsProps> = ({ nextStage }) => {
         />
       </div>
       <Button
-        label={loading ? "Don't wait" : 'Continue'}
+        label={'Continue'}
         onClick={() => {
           nextStage();
           dispatch(ready());

@@ -57,7 +57,11 @@ const Lobby: React.FC = () => {
 
   return (
     <div className={classes.lobbyContainer}>
-      <Button label="Create Lobby" onClick={() => createLobby()} />
+      <Button
+        disabled={!localStorage.getItem('loginToken')}
+        label="Create Lobby"
+        onClick={() => createLobby()}
+      />
       <div className={classes.divider} />
       <TextInput label="Lobby Token" onChange={setLobbyToken} message="Paste a valid lobby token" />
       <TextInput

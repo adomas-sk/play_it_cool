@@ -45,9 +45,10 @@ const Game = () => {
   }, [lobbyMaster]);
 
   useEffect(() => {
-    if (votingStarted) {
-      // setStage('voting');
-    } else if (players.length && players.every((p) => p?.confirmed)) {
+    // if (votingStarted) {
+    //   // setStage('voting');
+    // } else
+    if (players.length && players.every((p) => p?.confirmed && p?.ready)) {
       setStage('questioning');
     } else if (questioneer) {
       setStage('questioning');
