@@ -3,6 +3,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { IRootStore } from '../../../shared/store';
 import List from '../../../components/List';
 import { vote } from '../actions';
+import { makeStyles } from '@material-ui/styles';
+import { ITheme } from '../../../shared/theme';
+
+const useStyle = makeStyles((theme: ITheme) => ({
+  title: {
+    '@media screen and (max-width: 800px)': {
+      fontSize: '1rem',
+    },
+  },
+}));
 
 interface IVotingProps {
   nextStage: () => void;
@@ -13,11 +23,12 @@ const Voting: React.FC<IVotingProps> = ({ nextStage }) => {
   const words = useSelector((store: IRootStore) => store.game.words);
   const players = useSelector((store: IRootStore) => store.game.players);
   const dispatch = useDispatch();
+  const classes = useStyle();
 
   if (word === 'NONE' && words) {
     return (
       <>
-        <div>
+        <div className={classes.title}>
           Guess what the <strong>word</strong> was:
         </div>
         <List
@@ -36,13 +47,11 @@ const Voting: React.FC<IVotingProps> = ({ nextStage }) => {
     );
   }
 
-  const otherPlayers = players?.filter(
-    (p) => p.name !== localStorage.getItem('currentUsername')
-  );
+  const otherPlayers = players?.filter((p) => p.name !== localStorage.getItem('currentUsername'));
 
   return (
     <>
-      <div>
+      <div className={classes.title}>
         Guess who <strong>didn't know the word</strong>:{' '}
       </div>
       <List

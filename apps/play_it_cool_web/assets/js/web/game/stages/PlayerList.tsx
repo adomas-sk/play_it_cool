@@ -11,6 +11,10 @@ import { SET_SELF_AS_OWNER_OF_LOBBY } from '../../lobby/actionTypes';
 const useStyle = makeStyles((theme: ITheme) => ({
   lobbyToken: {
     color: theme.palette.primary,
+    height: '100%',
+    '@media screen and (max-width: 800px)': {
+      fontSize: '1rem',
+    },
   },
   lobbyTokenStrong: {
     fontWeight: 'bold',
@@ -47,8 +51,7 @@ const PlayerList: React.FC<PlayerListProps> = ({ lobbyToken, nextStage }) => {
     <>
       {lobbyToken && (
         <div className={classes.lobbyToken}>
-          Lobby Token:{' '}
-          <strong className={classes.lobbyTokenStrong}>{lobbyToken}</strong>
+          Lobby Token: <strong className={classes.lobbyTokenStrong}>{lobbyToken}</strong>
         </div>
       )}
       <List

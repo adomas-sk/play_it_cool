@@ -89,10 +89,10 @@ const Game = () => {
   };
 
   return (
-    <Layout>
+    <>
       <Button label="Go to Lobby" onClick={handleGoingToLobby} />
       {renderStages()}
-    </Layout>
+    </>
   );
 };
 

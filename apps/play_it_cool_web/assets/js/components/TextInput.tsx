@@ -20,13 +20,25 @@ const useStyle = makeStyles((theme: ITheme) => ({
     height: 50,
     width: '100%',
     fontSize: 24,
-    fontFamily: "'Balsamiq Sans', 'Helvetica', 'Arial', sans-serif",
+    fontFamily: "'Varela Round', 'Helvetica', 'Arial', sans-serif",
     color: theme.palette.secondaryDark,
     boxSizing: 'border-box',
   },
   label: {
     fontSize: 16,
+    fontWeight: 'bold',
     color: theme.palette.primary,
+  },
+  message: {
+    color: theme.palette.primaryLight,
+    margin: 0,
+    fontSize: 12,
+  },
+  tint: {
+    background: theme.palette.tint,
+    padding: '0 8px',
+    display: 'inline-flex',
+    flexDirection: 'column',
   },
 }));
 
@@ -35,12 +47,14 @@ interface ITextInputProps {
   outerValue?: string;
   onChange?: (v: string) => void;
   password?: boolean;
+  message?: string;
 }
 
 const TextInput: React.FC<ITextInputProps> = ({
   label,
   outerValue,
   onChange,
+  message = '',
   password = false,
 }) => {
   const classes = useStyle();
@@ -58,8 +72,22 @@ const TextInput: React.FC<ITextInputProps> = ({
   return (
     <div className={classes.inputContainer}>
       <div className={classes.inputWrapper}>
-        <div className={classes.label}>{label}</div>
+        {message ? (
+          <div className={classes.tint}>
+            <label htmlFor={label} className={classes.label}>
+              {label}
+            </label>
+            <p className={classes.message}>{message}</p>
+          </div>
+        ) : (
+          <div className={classes.tint} style={{ marginBottom: 20 }}>
+            <label htmlFor={label} className={classes.label}>
+              {label}
+            </label>
+          </div>
+        )}
         <input
+          name={label}
           className={classes.input}
           type={password ? 'password' : 'text'}
           value={usedValue}

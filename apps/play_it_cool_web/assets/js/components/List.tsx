@@ -6,7 +6,8 @@ import Button from './Button';
 const useStyle = makeStyles((theme: ITheme) => ({
   listContainer: {
     height: '100%',
-    width: '100%',
+    width: 'calc(100% - 16px)',
+    minHeight: 100,
     maxWidth: 600,
     display: 'flex',
     flexDirection: 'column',
@@ -15,14 +16,19 @@ const useStyle = makeStyles((theme: ITheme) => ({
     padding: 8,
     borderRadius: 4,
     width: '100%',
+    color: theme.palette.primary,
     background: theme.palette.secondaryTint,
     marginBottom: 8,
     display: 'flex',
     justifyContent: 'space-between',
-    boxShadow: `0px 0px 10px 3px ${theme.palette.tint}`,
+    // boxShadow: `0px 0px 10px 3px ${theme.palette.tint}`,
 
     '&:hover': {
-      color: theme.palette.primary,
+      color: theme.palette.blue,
+    },
+
+    '@media screen and (max-width: 800px)': {
+      fontSize: '1rem',
     },
   },
 }));
@@ -56,10 +62,7 @@ const List: React.FC<IListProps> = ({ itemList = [], loading, buttons }) => {
           <Button
             label={item.label}
             fullWidth
-            onClick={
-              item.onClick ||
-              (() => console.error('No onClick passed to List', { itemList }))
-            }
+            onClick={item.onClick || (() => console.error('No onClick passed to List', { itemList }))}
             key={item.key}
           />
         ))}

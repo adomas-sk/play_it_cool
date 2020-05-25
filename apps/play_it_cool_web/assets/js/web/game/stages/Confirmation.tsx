@@ -9,11 +9,14 @@ import { confirmWord } from '../actions';
 
 const useStyle = makeStyles((theme: ITheme) => ({
   wordDisplay: {
-    margin: 'auto',
+    margin: '24px auto',
     padding: 24,
     backgroundColor: theme.palette.secondaryTint,
     borderRadius: 5,
-    boxShadow: `0px 0px 10px 3px ${theme.palette.tint}`,
+
+    '@media screen and (max-width: 800px)': {
+      fontSize: '1rem',
+    },
   },
   bold: {
     color: theme.palette.primary,
@@ -28,9 +31,7 @@ interface IConfirmationProps {
 const Confirmation: React.FC<IConfirmationProps> = ({ nextStage }) => {
   const [confirmed, setConfirmed] = useState(false);
   const word = useSelector((store: IRootStore) => store.game.word);
-  const questioneer = useSelector(
-    (store: IRootStore) => store.game.questioneer
-  );
+  const questioneer = useSelector((store: IRootStore) => store.game.questioneer);
   const classes = useStyle();
   const dispatch = useDispatch();
 

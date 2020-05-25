@@ -6,12 +6,13 @@ export interface ITheme {
     primaryLight: Color;
     secondary: Color;
     secondaryDark: Color;
-    green: Color;
+    blue: Color;
     red: Color;
     black: Color;
     white: Color;
     secondaryTint: Color;
     tint: Color;
+    lightTint: Color;
   };
   sizes: {
     footerHeight: number;
@@ -21,16 +22,17 @@ export interface ITheme {
 
 const theme: ITheme = {
   palette: {
-    primary: '#FFF643',
-    primaryLight: '#FFF864',
-    secondary: '#662E9B',
-    secondaryDark: '#50247a',
-    green: '#71e284',
+    primary: '#fc466b',
+    primaryLight: '#fc8099',
+    secondary: '#633A96',
+    secondaryDark: '#4f2e77',
+    blue: '#3f5efb',
     red: '#e03c5a',
     black: '#030303',
     white: '#FEFEFF',
-    secondaryTint: 'rgba(80 , 36, 122, 0.4)',
-    tint: 'rgba(0, 0, 0, 0.4)',
+    secondaryTint: 'rgba(80 , 36, 122, 0.8)',
+    tint: 'rgba(0, 0, 0, 0.5)',
+    lightTint: 'rgba(255, 255, 255, 0.5)',
   },
   sizes: {
     footerHeight: 64,

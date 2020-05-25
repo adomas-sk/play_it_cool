@@ -1,20 +1,47 @@
 <div class="main">
   <div class="hero">
-    <h1>PLAY IT COOL</h1>
-    <p>
-      Fun party game you can play with your phones
-    </p>
-    <a href="/web">Play now</a>
+    <%# <h1>Play It Cool</h1> %>
+    <img src="/images/logo.svg" />
+    <div class="play-now-container">
+      <a href="/web">Play now</a>
+    </div>
   </div>
-  <div class="three">
-    <div>
-      See the word and answer the questions as if you don't or pretend that you know and play it cool
+  <div class="content">
+    <div class="text-background">
+      <p class="fancy-text">
+        Fun party game you can play with your friends anywhere
+      </p>
     </div>
-    <div>
-      Vote on who doesn't know the word or what the word was
+    <div class="explanation">
+      <div class="explain">
+        <h3>Secret word</h3>
+        <p>
+          See the word and answer the questions as if you don't know <strong>or</strong> play it cool
+        </p>
+        <img src="/images/word.png" />
+      </div>
+      <div class="explain">
+        <h3>Vote</h3>
+        <p>
+          Vote on who doesn't know the word <strong>or</strong> what the word was
+        </p>
+        <img src="/images/guess.png" />
+      </div>
+      <div class="explain">
+        <h3>Have fun</h3>
+        <p>
+          Play mind games with your friends and have fun!
+        </p>
+        <img src="/images/lobby.png" />
+      </div>
     </div>
-    <div>
-      Play mind games with your friends and have fun!
+  </div>
+  <div class="bottom">
+    <div class="play-now-container">
+      <a href="/web">Play now</a>
     </div>
+    <footer class="text-background">
+      All rights reserved ⓒ 2020
+    </footer>
   </div>
 </div>

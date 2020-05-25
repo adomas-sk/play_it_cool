@@ -4,11 +4,9 @@ import { ITheme } from '../../../shared/theme';
 import TextInput from '../../../components/TextInput';
 import Button from '../../../components/Button';
 import { useMutation } from '@apollo/react-hooks';
-import { LOGIN, REGISTER } from '../queries';
+import { REGISTER } from '../queries';
 import { REGISTER as REGISTER_ACTION } from '../actionTypes';
-import { loginAction } from '../actions';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 
 const useStyle = makeStyles((theme: ITheme) => ({
   centerContent: {
@@ -26,7 +24,6 @@ const Register = () => {
 
   const classes = useStyle();
   const dispatch = useDispatch();
-  const history = useHistory();
   const [register, { loading }] = useMutation(REGISTER, {
     onCompleted: (data) => dispatch({ type: REGISTER_ACTION, payload: data.register }),
   });
@@ -38,9 +35,23 @@ const Register = () => {
     <div className={classes.centerContent}>
       Register
       <TextInput label="Email" onChange={setEmail} />
-      <TextInput label="Username" onChange={setUsername} />
-      <TextInput password label="Password" onChange={setPassword} />
-      <TextInput password label="Confirm password" onChange={setPasswordConfirmation} />
+      <TextInput
+        label="Username"
+        onChange={setUsername}
+        message="Username has to be at least 6 characters long"
+      />
+      <TextInput
+        password
+        label="Password"
+        onChange={setPassword}
+        message="Password has to be at least 6 characters long"
+      />
+      <TextInput
+        password
+        label="Confirm password"
+        onChange={setPasswordConfirmation}
+        message="Confirm password has to be the same as Password"
+      />
       <Button
         label="Register"
         loading={loading}

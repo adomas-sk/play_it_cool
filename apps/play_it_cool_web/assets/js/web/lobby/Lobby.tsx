@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import { useMutation } from '@apollo/react-hooks';
 import { ITheme } from '../../shared/theme';
 import Button from '../../components/Button';
-import Layout from '../../components/Layout';
 import { CREATE_LOBBY, JOIN_LOBBY } from './queries';
 import { SET_SELF_AS_OWNER_OF_LOBBY } from './actionTypes';
 import { joinSocketChannel } from './actions';
@@ -57,26 +56,28 @@ const Lobby: React.FC = () => {
   }, [createLobbyData, joinLobbyData]);
 
   return (
-    <Layout>
-      <div className={classes.lobbyContainer}>
-        <Button label="Create Lobby" onClick={() => createLobby()} />
-        <div className={classes.divider} />
-        <TextInput label="Lobby Token" onChange={setLobbyToken} />
-        <TextInput label="Player Name" onChange={setPlayerName} />
-        <Button
-          disabled={!RegExp(/^[0-9]{6}$/).test(lobbyToken) || !playerName.length}
-          label="Join Lobby"
-          onClick={() =>
-            joinLobby({
-              variables: {
-                playerName,
-                lobbyToken: Number.parseInt(lobbyToken),
-              },
-            })
-          }
-        />
-      </div>
-    </Layout>
+    <div className={classes.lobbyContainer}>
+      <Button label="Create Lobby" onClick={() => createLobby()} />
+      <div className={classes.divider} />
+      <TextInput label="Lobby Token" onChange={setLobbyToken} message="Paste a valid lobby token" />
+      <TextInput
+        label="Player Name"
+        onChange={setPlayerName}
+        message="Name that you're going to use in the lobby you're joining"
+      />
+      <Button
+        disabled={!RegExp(/^[0-9]{6}$/).test(lobbyToken) || !playerName.length}
+        label="Join Lobby"
+        onClick={() =>
+          joinLobby({
+            variables: {
+              playerName,
+              lobbyToken: Number.parseInt(lobbyToken),
+            },
+          })
+        }
+      />
+    </div>
   );
 };
 

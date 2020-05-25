@@ -5,23 +5,30 @@ import List from '../../../components/List';
 import { useDispatch, useSelector } from 'react-redux';
 import { startGame } from '../actions';
 import { IRootStore } from '../../../shared/store';
+import { makeStyles } from '@material-ui/styles';
+import { ITheme } from '../../../shared/theme';
+
+const useStyle = makeStyles((theme: ITheme) => ({
+  title: {
+    color: theme.palette.white,
+    '@media screen and (max-width: 800px)': {
+      fontSize: '1rem',
+    },
+  },
+}));
 
 interface ITopicListProps {
   nextStage: () => void;
 }
 
 const TopicList: React.FC<ITopicListProps> = ({ nextStage }) => {
-  const {
-    data,
-    loading,
-  }: { data: { subjects: Topic[] } | undefined; loading: boolean } = useQuery(
+  const { data, loading }: { data: { subjects: Topic[] } | undefined; loading: boolean } = useQuery(
     FETCH_TOPICS
   );
   const dispatch = useDispatch();
   const channel = useSelector((store: IRootStore) => store.game.channel);
-  const wordReceived = useSelector(
-    (state: IRootStore) => state.game.wordReceived
-  );
+  const wordReceived = useSelector((state: IRootStore) => state.game.wordReceived);
+  const classes = useStyle();
 
   useEffect(() => {
     if (wordReceived) {
@@ -42,12 +49,8 @@ const TopicList: React.FC<ITopicListProps> = ({ nextStage }) => {
 
   return (
     <>
-      <div>Choose a topic for this game</div>
-      <List
-        loading={loading}
-        buttons
-        itemList={generateItemList(data?.subjects)}
-      />
+      <div className={classes.title}>Choose a topic for this game</div>
+      <List loading={loading} buttons itemList={generateItemList(data?.subjects)} />
     </>
   );
 };

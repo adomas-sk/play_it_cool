@@ -13,6 +13,10 @@ const useStyle = makeStyles((theme: ITheme) => ({
     justifyContent: 'space-between',
     width: '100%',
     padding: 12,
+
+    '@media screen and (max-width: 800px)': {
+      fontSize: '1rem',
+    },
   },
   row: {
     display: 'flex',

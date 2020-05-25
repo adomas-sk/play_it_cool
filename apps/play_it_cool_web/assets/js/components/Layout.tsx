@@ -1,10 +1,10 @@
-import React, { ReactChildren, ReactChild } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { ITheme } from '../shared/theme';
-import Footer from './Footer';
 import IconAnimation from './IconAnimation';
+import Helper from './Helper';
 
 const useStyle = makeStyles((theme: ITheme) => ({
   container: {
@@ -34,7 +34,9 @@ const useStyle = makeStyles((theme: ITheme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: `calc(100vh - (${theme.sizes.footerHeight}px + ${theme.sizes.contentBackgroundSpacing * 4}px))`,
+    minHeight: `calc(100vh - (${theme.sizes.footerHeight}px + ${
+      theme.sizes.contentBackgroundSpacing * 4
+    }px))`,
     borderRadius: 4,
     padding: theme.sizes.contentBackgroundSpacing,
     position: 'relative',
@@ -47,6 +49,9 @@ const useStyle = makeStyles((theme: ITheme) => ({
   gameBackground: {
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
+  },
+  logo: {
+    width: '100%',
   },
 }));
 
@@ -71,10 +76,13 @@ const Layout: React.FC<ILayoutProps> = ({ children }) => {
       <div className={containerClassName}>
         <IconAnimation />
         <div className={classes.childrenContainer}>
+          <Link to="/">
+            <img src="/images/logo.svg" className={classes.logo} />
+          </Link>
           <div className={classes.childrenWrapper}>{children}</div>
         </div>
-        <Footer />
       </div>
+      <Helper />
     </div>
   );
 };

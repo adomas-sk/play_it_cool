@@ -8,9 +8,10 @@ const useStyle = makeStyles((theme: ITheme) => ({
     padding: 4,
   },
   buttonBase: {
+    fontFamily: "'Varela Round', 'Helvetica', 'Arial', sans-serif",
     padding: '16px 34px',
     fontSize: 24,
-    color: theme.palette.secondary,
+    color: theme.palette.white,
     border: 'none',
     borderRadius: 4,
   },
@@ -42,13 +43,7 @@ interface IButtonProps {
   loading?: boolean;
 }
 
-const Button: React.FC<IButtonProps> = ({
-  label,
-  onClick,
-  fullWidth,
-  disabled = false,
-  loading = false,
-}) => {
+const Button: React.FC<IButtonProps> = ({ label, onClick, fullWidth, disabled = false, loading = false }) => {
   const classes = useStyle();
 
   const buttonClassName = clsx({
@@ -60,12 +55,7 @@ const Button: React.FC<IButtonProps> = ({
 
   return (
     <div className={classes.container}>
-      <button
-        type="button"
-        className={buttonClassName}
-        onClick={onClick}
-        disabled={disabled || loading}
-      >
+      <button type="button" className={buttonClassName} onClick={onClick} disabled={disabled || loading}>
         {label}
         {loading ? '...' : ''}
       </button>

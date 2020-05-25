@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Layout from '../../components/Layout';
-import TextInput from '../../components/TextInput';
 import Button from '../../components/Button';
 import { makeStyles } from '@material-ui/styles';
 import { ITheme } from '../../shared/theme';
@@ -27,25 +25,27 @@ const useStyle = makeStyles((theme: ITheme) => ({
   auth: {
     display: 'flex',
     alignItems: 'center',
+
+    '@media screen and (max-width: 800px)': {
+      flexDirection: 'column',
+    },
   },
   dividerHorizontal: {
     margin: 12,
     height: '100%',
     width: 1,
     backgroundColor: theme.palette.secondaryDark,
+
+    '@media screen and (max-width: 800px)': {
+      width: '100%',
+      height: 1,
+    },
   },
 }));
 
 const Initial = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const classes = useStyle();
   const history = useHistory();
-  const dispatch = useDispatch();
-
-  const [login, { loading }] = useMutation(LOGIN, {
-    onCompleted: (data) => dispatch(loginAction(data, history)),
-  });
 
   useEffect(() => {
     if (localStorage.getItem('loginToken')) {
@@ -54,7 +54,7 @@ const Initial = () => {
   }, []);
 
   return (
-    <Layout>
+    <>
       <div className={classes.auth}>
         <Login />
         <div className={classes.dividerHorizontal} />
@@ -65,7 +65,7 @@ const Initial = () => {
         Or continue as a guest
         <Button label="Continue" onClick={() => history.push('/lobby')} />
       </div>
-    </Layout>
+    </>
   );
 };
 

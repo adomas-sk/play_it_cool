@@ -12,10 +12,13 @@ const useStyle = makeStyles((theme: ITheme) => ({
     flexDirection: 'column',
     justifyContent: 'center',
     padding: 24,
-    margin: 'auto',
+    margin: '24px auto',
     backgroundColor: theme.palette.secondaryTint,
-    boxShadow: `0px 0px 10px 3px ${theme.palette.tint}`,
     borderRadius: 4,
+
+    '@media screen and (max-width: 800px)': {
+      fontSize: '1rem',
+    },
 
     '& strong': {
       color: theme.palette.primary,
@@ -28,14 +31,10 @@ interface IQuestioningProps {
 }
 
 const Questioning: React.FC<IQuestioningProps> = ({ nextStage }) => {
-  const questioneer = useSelector(
-    (store: IRootStore) => store.game.questioneer
-  );
+  const questioneer = useSelector((store: IRootStore) => store.game.questioneer);
   const answereer = useSelector((store: IRootStore) => store.game.answereer);
   const question = useSelector((store: IRootStore) => store.game.question);
-  const votingStarted = useSelector(
-    (store: IRootStore) => store.game.votingStarted
-  );
+  const votingStarted = useSelector((store: IRootStore) => store.game.votingStarted);
   const dispatch = useDispatch();
 
   const classes = useStyle();
@@ -55,10 +54,7 @@ const Questioning: React.FC<IQuestioningProps> = ({ nextStage }) => {
           <br />
           <strong>{question.question}</strong>
         </div>
-        <Button
-          label="Mark as Answered"
-          onClick={() => dispatch(markQuestionAsAnswered(question.id))}
-        />
+        <Button label="Mark as Answered" onClick={() => dispatch(markQuestionAsAnswered(question.id))} />
       </>
     );
   }
