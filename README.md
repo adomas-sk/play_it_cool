@@ -34,7 +34,13 @@ To populate database for testing
 
 By default project is running on port 4000
 
-## Deployment
+## Deployment to Gigalixir
+
+The video guide on home page does a good job on describing how to deploy to [Gigalixir](https://www.gigalixir.com/)
+
+## Deployment to DigitalOcean via terraform (deprecated)
+
+> DigitalOcean is quite expensive so I decided to switch to Gigalixir
 
 This project was made to deploy to DigitalOcean with terraform.
 To run these commands you need terraform installed locally.
