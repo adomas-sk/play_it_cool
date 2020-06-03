@@ -28,12 +28,7 @@ const initSocket = (lobbyToken: number, successCallback?: () => void) => {
     .join()
     .receive(
       'ok',
-      (resp: {
-        players: Player[];
-        lobbyMaster: number;
-        questioneer?: Player;
-        answereer?: Player;
-      }) => {
+      (resp: { players: Player[]; lobbyMaster: number; questioneer?: Player; answereer?: Player }) => {
         store.dispatch({ type: UPDATE_LOBBY_STATE, payload: resp });
         if (successCallback) {
           successCallback();
@@ -46,30 +41,15 @@ const initSocket = (lobbyToken: number, successCallback?: () => void) => {
   channel.on('player_update', (message: { players: Player[] }) => {
     store.dispatch({ type: UPDATE_LOBBY_PLAYERS, payload: message });
   });
-  channel.on(
-    'questioning',
-    (message: {
-      questioneer: Player;
-      answereer: Player;
-      question: Question;
-    }) => {
-      store.dispatch({ type: UPDATE_QUESTIONING, payload: message });
-    }
-  );
+  channel.on('questioning', (message: { questioneer: Player; answereer: Player; question: Question }) => {
+    store.dispatch({ type: UPDATE_QUESTIONING, payload: message });
+  });
   channel.on('vote', (message: { words: string[] }) => {
     store.dispatch({ type: START_VOTE, payload: message.words });
   });
-  channel.on(
-    'ending',
-    (message: {
-      votes: Vote;
-      playingItCool: Player;
-      word: string;
-      scores: Score;
-    }) => {
-      store.dispatch({ type: SHOW_RESULTS, payload: message });
-    }
-  );
+  channel.on('ending', (message: { votes: Vote; playingItCool: Player; word: string; scores: Score }) => {
+    store.dispatch({ type: SHOW_RESULTS, payload: message });
+  });
 
   return socket;
 };
@@ -82,12 +62,9 @@ export const initializeUserSocket = () => {
   userSocket.connect();
 
   // Now that you are connected, you can join channels with a topic:
-  const channel = userSocket.channel(
-    `user:${localStorage.getItem('channelToken')}`,
-    {
-      token: localStorage.getItem('channelToken'),
-    }
-  );
+  const channel = userSocket.channel(`user:${localStorage.getItem('channelToken')}`, {
+    token: localStorage.getItem('channelToken'),
+  });
   channel
     .join()
     // .receive('ok', (_resp) => {

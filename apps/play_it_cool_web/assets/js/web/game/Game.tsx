@@ -45,10 +45,10 @@ const Game = () => {
   }, [lobbyMaster]);
 
   useEffect(() => {
-    // if (votingStarted) {
-    //   // setStage('voting');
-    // } else
-    if (players.length && players.every((p) => p?.confirmed && p?.ready)) {
+    if (votingStarted) {
+      // This is needed. change this later
+      // setStage('voting');
+    } else if (players.length && players.every((p) => p?.confirmed && p?.ready)) {
       setStage('questioning');
     } else if (questioneer) {
       setStage('questioning');
@@ -71,6 +71,7 @@ const Game = () => {
   };
 
   const renderStages = () => {
+    console.log(stage);
     switch (stage) {
       case 'init':
         return <PlayerList lobbyToken={lobbyToken} nextStage={() => setStage('topic')} />;
