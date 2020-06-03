@@ -71,7 +71,6 @@ const Game = () => {
   };
 
   const renderStages = () => {
-    console.log(stage);
     switch (stage) {
       case 'init':
         return <PlayerList lobbyToken={lobbyToken} nextStage={() => setStage('topic')} />;
